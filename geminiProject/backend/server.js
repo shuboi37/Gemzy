@@ -1,12 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
-import geminiRouter from "./routes/gemini.js";
+import geminiRouter from "./routes/route.gemini.js";
 import cors from "cors";
 
-dotenv.config();
+dotenv.config({ path: "./config/.env" });
 
 const app = express();
-app.use(express.json());
+// app.use(express.json());
 app.use(cors());
 app.use("/api", geminiRouter);
 

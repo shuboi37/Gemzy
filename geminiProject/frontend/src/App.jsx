@@ -1,7 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
 import { Textarea } from "./components/ui/TextArea";
-import PlaceholdersAndVanishInputDemo from "./components/placeholders-and-vanish-input-demo";
 import { PromptInputWithActions } from "./components/inputBox-demo";
 function App() {
   const [response, setResponse] = useState("");
@@ -13,31 +12,27 @@ function App() {
 
   const [onlyText, setOnlyText] = useState(false);
 
-  const handleSubmit = () => {
-    if (input.trim() || files.length > 0) {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        setInput("");
-        setFiles([]);
-      }, 2000);
-    }
-  };
-
-  async function fetcher() {
+  async function fetcher(formdata) {
     try {
       setImageDataSrc("");
       setLoading(true);
 
+      if (input.trim() || files.length > 0) {
+        setLoading(true);
+        setTimeout(() => {
+          setLoading(false);
+          setInput("");
+          setFiles([]);
+        }, 2000);
+      }
+
       const backendResponse = await axios.post(
         "http://localhost:3000/api/response",
-        {
-          input: input,
-          model: model,
-        },
+
+        formdata,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -54,14 +49,14 @@ function App() {
     }
   }
 
-  const onSubmitHandler = () => {
-    handleSubmit(), fetcher();
+  const onSubmitHandler = (formdata) => {
+    fetcher(formdata);
   };
 
   return (
     <div className="flex flex-col h-screen px-4 py-10 space-y-12 items-center">
       {response !== "Thinking" && (
-        <h1 className="text-white text-pretty whitespace-pre-wrap text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight text-center">
+        <h1 className="text-white font-semibold text-pretty whitespace-pre-wrap text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight text-center">
           Say it. I’ll make it real.
         </h1>
       )}
