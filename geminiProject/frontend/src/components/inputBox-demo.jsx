@@ -42,21 +42,11 @@ export function PromptInputWithActions({
     }
   };
 
-  const handleSubmit = async () => {
-    const formdata = new FormData();
-    formdata.append("input", value);
-    formdata.append("model", model);
-    files.map((file) => {
-      formdata.append("files", file);
-    });
-    await onSubmit(formdata);
-  };
-
   return (
     <PromptInput
       value={value}
       loading={loading}
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
       onChange={onChange}
       disabled={disabled}
       className="w-full max-w-(--breakpoint-md)"
