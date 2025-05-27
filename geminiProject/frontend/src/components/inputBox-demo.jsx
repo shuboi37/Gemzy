@@ -8,7 +8,7 @@ import {
 } from "./ui/InputBox";
 import { Button } from "./ui/Button";
 import { ArrowUp, Paperclip, Square, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ModelDropdown } from "../components/ui/ReusableUI";
 
@@ -33,6 +33,9 @@ export function PromptInputWithActions({
       const newFiles = Array.from(event.target.files);
       setFiles((prev) => [...prev, ...newFiles]);
     }
+    if (uploadInputRef?.current) {
+      uploadInputRef.current.value = "";
+    }
   };
 
   const handleRemoveFile = (index) => {
@@ -41,6 +44,17 @@ export function PromptInputWithActions({
       uploadInputRef.current.value = "";
     }
   };
+
+  useEffect(() => {
+    const globalEnterListener = (e) => {
+      if (e.key === "Enter" && !e.shiftKey && files.length > 0 && !loading) {
+        e.preventDefault();
+        onSubmit?.(e);
+      }
+    };
+    window.addEventListener("keydown", globalEnterListener);
+    return () => window.removeEventListener("keydown", globalEnterListener);
+  }, [files, loading, onSubmit]);
 
   return (
     <PromptInput
@@ -56,10 +70,11 @@ export function PromptInputWithActions({
           {files.map((file, index) => (
             <div
               key={index}
-              className="bg-secondary flex items-center gap-2 rounded-lg px-3 py-2 text-sm"
+              className=" bg-black text-white text-pretty flex items-center gap-2 rounded-lg px-3 py-2 text-sm"
             >
               <Paperclip className="size-4" />
               <span className="max-w-[120px] truncate">{file.name}</span>
+              {console.log(file.name)}
               <button
                 onClick={() => handleRemoveFile(index)}
                 className="hover:bg-secondary/50 rounded-full p-1"
@@ -103,7 +118,7 @@ export function PromptInputWithActions({
           </PromptInputAction>
         </div>
 
-        {value.trim() && (
+        {(value.trim() || files.length > 0) && (
           <PromptInputAction
             tooltip={loading ? "Stop generation" : "Send message"}
           >

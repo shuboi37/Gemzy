@@ -75,7 +75,8 @@ function PromptInputTextarea({
 
   ...props
 }) {
-  const { value, maxHeight, onSubmit, disabled, onChange } = usePromptInput();
+  const { value, maxHeight, onSubmit, disabled, onChange, isLoading } =
+    usePromptInput();
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -90,9 +91,9 @@ function PromptInputTextarea({
   }, [value, maxHeight, disableAutosize]);
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey && !isLoading) {
       e.preventDefault();
-      value.trim() && onSubmit?.();
+      onSubmit?.(e);
     }
     onKeyDown?.(e);
   };
