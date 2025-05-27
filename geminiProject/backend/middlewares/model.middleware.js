@@ -4,7 +4,13 @@ export const detectModel = async (req, res, next) => {
     const input = req.body.input;
     let finalModel = req.body.model;
     const files = req.files;
-    if (!files) {
+
+    const regex =
+      /(?:https?:\/\/)?(?:www\.)?[\w-]+(?:\.[\w.-]+)+(?:\/[\w\-./?%&=]*)?\.pdf/gi;
+    const matches = input.match(regex);
+    // console.log(files);
+
+    if (!files || !matches) {
       const ourPrompt = `Is this prompt related to image generation? Reply in yes or no only.Prompt:${input}`;
       const response = await ai.models.generateContent({
         model: "gemini-2.0-flash",

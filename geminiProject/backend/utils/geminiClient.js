@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, createPartFromUri } from "@google/genai";
 import dotenv from "dotenv";
 
 dotenv.config({ path: "./config/.env" });
@@ -6,3 +6,5 @@ dotenv.config({ path: "./config/.env" });
 export const ai = new GoogleGenAI({
   apiKey: `${process.env.GEMINI_APIKEY}`,
 });
+
+export { createPartFromUri };

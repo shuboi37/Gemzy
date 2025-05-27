@@ -1,19 +1,106 @@
-import { ai } from "../utils/geminiClient.js";
+import { ai, createPartFromUri } from "../utils/geminiClient.js";
 import axios from "axios";
 
 export const handleGemini = async (req, res) => {
   try {
     const input = req.body.input;
     const model = req.model;
+    const files = req.files;
+    const fileObj = files[0];
     // console.log("hi");
 
     if (
       model === "gemini-2.0-flash" ||
       model === "gemini-2.0-flash-exp-image-generation"
     ) {
+      console.log("1");
+
+      const detectUrl = (input) => {
+        const regex =
+          /(?:https?:\/\/)?(?:www\.)?[\w-]+(?:\.[\w.-]+)+(?:\/[\w\-./?%&=]*)?\.pdf/gi;
+        const matches = input.match(regex);
+        if (!matches)
+          return { prompt: input.trim(), pdfUrl: null, displayName: null };
+        const rawUrl = matches[0];
+        const pdfUrl = rawUrl.startsWith("http") ? rawUrl : "https://" + rawUrl;
+
+        const prompt = input.replace(rawUrl, "").trim();
+        const displayName = pdfUrl.split("/").pop().split("?")[0].split("#")[0];
+
+        return { prompt, pdfUrl, displayName };
+      };
+
+      const { prompt, pdfUrl, displayName } = detectUrl(input);
+      let content;
+      if (pdfUrl) {
+        const pdfBuffer = await fetch(pdfUrl).then((response) =>
+          response.arrayBuffer()
+        );
+
+        const fileBlob = new Blob([pdfBuffer], { type: "application/pdf" });
+
+        const file = await ai.files.upload({
+          file: fileBlob,
+          config: {
+            displayName: displayName,
+          },
+        });
+
+        // Wait for the file to be processed.
+        let getFile = await ai.files.get({ name: file.name });
+
+        while (getFile.state === "PROCESSING") {
+          getFile = await ai.files.get({ name: file.name });
+          console.log(`current file status: ${getFile.state}`);
+          console.log("File is still processing, retrying in 5 seconds");
+
+          await new Promise((resolve) => {
+            setTimeout(resolve, 5000);
+          });
+        }
+        if (file.state === "FAILED") {
+          throw new Error("File processing failed.");
+        }
+
+        // Add the file to the contents.
+        content = [prompt];
+
+        if (file.uri && file.mimeType) {
+          const fileContent = createPartFromUri(file.uri, file.mimeType);
+          content.push(fileContent);
+        }
+      } else if (fileObj) {
+        const file = await ai.files.upload({
+          file: new Blob([fileObj.buffer], { type: fileObj.mimetype }),
+          config: {
+            displayName: fileObj.originalname,
+          },
+        });
+        let getFile = await ai.files.get({ name: file.name });
+        while (getFile.state === "PROCESSING") {
+          getFile = await ai.files.get({ name: file.name });
+          console.log(`current file status: ${getFile.state}`);
+          console.log("File is still processing, retrying in 5 seconds");
+
+          await new Promise((resolve) => {
+            setTimeout(resolve, 5000);
+          });
+        }
+        if (file.state === "FAILED") {
+          throw new Error("File processing failed.");
+        }
+
+        content = [input];
+
+        if (file.uri && file.mimeType) {
+          const fileContent = createPartFromUri(file.uri, file.mimeType);
+          content.push(fileContent);
+        }
+      }
+
       const response = await ai.models.generateContent({
         model: model,
-        contents: input,
+        contents: pdfUrl || fileObj ? content : input,
         ...(model === "gemini-2.0-flash-exp-image-generation" && {
           config: {
             responseModalities: ["Text", "Image"],
@@ -97,3 +184,25 @@ export const handleGemini = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+//todos
+// error handling middleware
+// try catch above
+// image handling
+// multiple pdfs handling and if user uploads pdf and give url both
+// pdf validation
+//
+// ui/ux
+// tooltip
+// streaming response
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
