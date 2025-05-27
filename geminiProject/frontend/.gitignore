@@ -1,24 +1,184 @@
-# Logs
-logs
-*.log
+# ========================
+# OS-specific files
+# ========================
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~ 
+.nfs*
+
+# ========================
+# Node.js
+# ========================
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+.pnpm-debug.log*
+.env
+.env.*.local
 
-node_modules
-dist
-dist-ssr
-*.local
+# ========================
+# Python
+# ========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
+# ========================
+# Java
+# ========================
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+*.log
+*.jks
+target/
+build/
+
+# ========================
+# C / C++
+# ========================
+*.out
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+
+# ========================
+# Go
+# ========================
+bin/
+*.exe
+*.test
+*.out
+vendor/
+
+# ========================
+# Rust
+# ========================
+/target/
+/Cargo.lock
+
+# ========================
+# PHP
+# ========================
+vendor/
+composer.lock
+
+# ========================
+# Ruby
+# ========================
+*.gem
+*.rbc
+.bundle/
+vendor/bundle/
+log/
+tmp/
+
+# ========================
+# .NET
+# ========================
+bin/
+obj/
+*.user
 *.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+*.sdf
+*.cache
+*.log
+*.vspscc
+*.vssscc
+.vscode/
+.vs/
+
+# ========================
+# IDEs & Editors
+# ========================
+# VSCode
+.vscode/
+.history/
+.code-workspace
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*.swp
+*.swo
+
+# Emacs
+*~
+# Backup files
+*.bak
+
+# ========================
+# Logs & Databases
+# ========================
+*.log
+*.sql
+*.sqlite
+
+# ========================
+# Frontend Build Artifacts
+# ========================
+dist/
+build/
+.cache/
+.next/
+.nuxt/
+out/
+coverage/
+*.tsbuildinfo
+
+# ========================
+# Miscellaneous
+# ========================
+*.lock
+*.pid
+*.seed
+*.pid.lock
+*.tgz
+*.gz
+*.zip
+*.tar
+*.7z
+*.rar
+
+# ========================
+# Optional: OS or editor folders
+# ========================
+.idea/
+*.tmp
+
+# ========================
+# Custom .env files
+# ========================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
