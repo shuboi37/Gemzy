@@ -1,4 +1,8 @@
-import { GoogleGenAI, createPartFromUri } from "@google/genai";
+import {
+  GoogleGenAI,
+  createPartFromUri,
+  createUserContent,
+} from "@google/genai";
 import dotenv from "dotenv";
 
 dotenv.config({ path: "./config/.env" });
@@ -8,3 +12,4 @@ export const ai = new GoogleGenAI({
 });
 
 export { createPartFromUri };
+export { createUserContent };

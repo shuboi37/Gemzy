@@ -1,106 +1,115 @@
-import { ai, createPartFromUri } from "../utils/geminiClient.js";
+import { config } from "dotenv";
+import {
+  ai,
+  createPartFromUri,
+  createUserContent,
+} from "../utils/geminiClient.js";
 import axios from "axios";
 
 export const handleGemini = async (req, res) => {
   try {
     const input = req.body.input;
     const model = req.model;
-    const files = req.files;
-    const fileObj = files[0];
+    const files = req.files || [];
+    let content = [input];
     // console.log("hi");
 
     if (
       model === "gemini-2.0-flash" ||
       model === "gemini-2.0-flash-exp-image-generation"
     ) {
-      console.log("1");
-
-      const detectUrl = (input) => {
-        const regex =
-          /(?:https?:\/\/)?(?:www\.)?[\w-]+(?:\.[\w.-]+)+(?:\/[\w\-./?%&=]*)?\.pdf/gi;
-        const matches = input.match(regex);
-        if (!matches)
-          return { prompt: input.trim(), pdfUrl: null, displayName: null };
-        const rawUrl = matches[0];
-        const pdfUrl = rawUrl.startsWith("http") ? rawUrl : "https://" + rawUrl;
-
-        const prompt = input.replace(rawUrl, "").trim();
-        const displayName = pdfUrl.split("/").pop().split("?")[0].split("#")[0];
-
-        return { prompt, pdfUrl, displayName };
-      };
-
-      const { prompt, pdfUrl, displayName } = detectUrl(input);
-      let content;
-      if (pdfUrl) {
-        const pdfBuffer = await fetch(pdfUrl).then((response) =>
-          response.arrayBuffer()
+      const regex =
+        /(?:https?:\/\/)?(?:www\.)?[\w-]+(?:\.[\w.-]+)+(?:\/[\w\-./?%&=]*)?\.pdf/gi;
+      const matches = input.match(regex);
+      if (matches) {
+        const urls = matches.map((url) =>
+          url.startsWith("http") ? url : "https://" + url
         );
+        let cleanedPrompt = input;
+        for (const url of urls) {
+          cleanedPrompt = cleanedPrompt.replace(url, "").trim();
+        }
 
-        const fileBlob = new Blob([pdfBuffer], { type: "application/pdf" });
+        content = [cleanedPrompt];
 
-        const file = await ai.files.upload({
-          file: fileBlob,
-          config: {
-            displayName: displayName,
-          },
-        });
+        for (const url of urls) {
+          const displayName = url.split("/").pop().split("?")[0].split("#")[0];
+          const pdfBuffer = await fetch(url).then((response) =>
+            response.arrayBuffer()
+          );
 
-        // Wait for the file to be processed.
-        let getFile = await ai.files.get({ name: file.name });
+          const fileBlob = new Blob([pdfBuffer], { type: "application/pdf" });
 
-        while (getFile.state === "PROCESSING") {
-          getFile = await ai.files.get({ name: file.name });
-          console.log(`current file status: ${getFile.state}`);
-          console.log("File is still processing, retrying in 5 seconds");
-
-          await new Promise((resolve) => {
-            setTimeout(resolve, 5000);
+          const file = await ai.files.upload({
+            file: fileBlob,
+            config: { displayName },
           });
-        }
-        if (file.state === "FAILED") {
-          throw new Error("File processing failed.");
-        }
 
-        // Add the file to the contents.
-        content = [prompt];
+          // Wait for the file to be processed.
+          let getFile = await ai.files.get({ name: file.name });
 
-        if (file.uri && file.mimeType) {
-          const fileContent = createPartFromUri(file.uri, file.mimeType);
-          content.push(fileContent);
+          while (getFile.state === "PROCESSING") {
+            getFile = await ai.files.get({ name: file.name });
+            console.log(`current file status: ${getFile.state}`);
+            console.log("File is still processing, retrying in 5 seconds");
+
+            await new Promise((resolve) => {
+              setTimeout(resolve, 5000);
+            });
+          }
+          if (file.state === "FAILED") {
+            throw new Error("File processing failed.");
+          }
+
+          if (file.uri && file.mimeType) {
+            const fileContent = createPartFromUri(file.uri, file.mimeType);
+            content.push(fileContent);
+          }
         }
-      } else if (fileObj) {
-        const file = await ai.files.upload({
-          file: new Blob([fileObj.buffer], { type: fileObj.mimetype }),
-          config: {
-            displayName: fileObj.originalname,
-          },
-        });
-        let getFile = await ai.files.get({ name: file.name });
-        while (getFile.state === "PROCESSING") {
-          getFile = await ai.files.get({ name: file.name });
-          console.log(`current file status: ${getFile.state}`);
-          console.log("File is still processing, retrying in 5 seconds");
+      }
+      if (files.length > 0) {
+        for (const fileObj of files) {
+          const isImg =
+            fileObj.mimeType.split("/")[0] === "image" ? true : false;
 
-          await new Promise((resolve) => {
-            setTimeout(resolve, 5000);
+          const file = await ai.files.upload({
+            file: new Blob([fileObj.buffer], { type: fileObj.mimetype }),
+            ...(isImg
+              ? {
+                  config: {
+                    mimeType: fileObj.mimeType,
+                  },
+                }
+              : {
+                  config: { displayName: fileObj.displayName },
+                }),
           });
-        }
-        if (file.state === "FAILED") {
-          throw new Error("File processing failed.");
-        }
+          if (!isImg) {
+            let getFile = await ai.files.get({ name: file.name });
+            while (getFile.state === "PROCESSING") {
+              getFile = await ai.files.get({ name: file.name });
+              console.log(`current file status: ${getFile.state}`);
+              console.log("File is still processing, retrying in 5 seconds");
 
-        content = [input];
+              await new Promise((resolve) => {
+                setTimeout(resolve, 5000);
+              });
+            }
+            if (file.state === "FAILED") {
+              throw new Error("File processing failed.");
+            }
 
-        if (file.uri && file.mimeType) {
-          const fileContent = createPartFromUri(file.uri, file.mimeType);
-          content.push(fileContent);
+            if (file.uri && file.mimeType) {
+              const fileContent = createPartFromUri(file.uri, file.mimeType);
+              content.push(fileContent);
+            }
+          }
         }
       }
 
       const response = await ai.models.generateContent({
         model: model,
-        contents: pdfUrl || fileObj ? content : input,
+        contents: content,
         ...(model === "gemini-2.0-flash-exp-image-generation" && {
           config: {
             responseModalities: ["Text", "Image"],
@@ -131,16 +140,16 @@ export const handleGemini = async (req, res) => {
         }
         return res.json({
           response: finalResponse,
-          textWithPic: textWithPic,
+          textWithPic,
 
-          imageDataSrc: imageDataSrc,
-          model: model,
+          imageDataSrc,
+          model,
         });
       } else {
         const finalResponse = response.text;
         return res.json({
           response: finalResponse,
-          model: model,
+          model,
         });
       }
     } else {
