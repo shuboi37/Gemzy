@@ -1,4 +1,3 @@
-import { config } from "dotenv";
 import {
   ai,
   createPartFromUri,
@@ -12,6 +11,7 @@ export const handleGemini = async (req, res) => {
     const model = req.model;
     const files = req.files || [];
     let content = [input];
+    const imagesArr = [];
     // console.log("hi");
 
     if (
@@ -67,24 +67,28 @@ export const handleGemini = async (req, res) => {
           }
         }
       }
+
       if (files.length > 0) {
         for (const fileObj of files) {
+          console.log(fileObj);
+
           const isImg =
-            fileObj.mimeType.split("/")[0] === "image" ? true : false;
+            fileObj.mimetype.split("/")[0] === "image" ? true : false;
+          console.log(isImg);
 
           const file = await ai.files.upload({
             file: new Blob([fileObj.buffer], { type: fileObj.mimetype }),
-            ...(isImg
-              ? {
-                  config: {
-                    mimeType: fileObj.mimeType,
-                  },
-                }
-              : {
-                  config: { displayName: fileObj.displayName },
-                }),
+            ...(isImg && {
+              config: {
+                mimeType: fileObj.mimetype,
+              },
+            }),
+
+            config: { displayName: fileObj.originalname },
           });
           if (!isImg) {
+            console.log("hi");
+
             let getFile = await ai.files.get({ name: file.name });
             while (getFile.state === "PROCESSING") {
               getFile = await ai.files.get({ name: file.name });
@@ -101,7 +105,13 @@ export const handleGemini = async (req, res) => {
 
             if (file.uri && file.mimeType) {
               const fileContent = createPartFromUri(file.uri, file.mimeType);
+              console.log(fileContent);
+
               content.push(fileContent);
+            }
+          } else {
+            if (file.uri && file.mimeType) {
+              imagesArr.push(createPartFromUri(file.uri, file.mimeType));
             }
           }
         }
@@ -109,7 +119,10 @@ export const handleGemini = async (req, res) => {
 
       const response = await ai.models.generateContent({
         model: model,
-        contents: content,
+        contents:
+          imagesArr.length > 0
+            ? createUserContent([...imagesArr, input.trim()])
+            : content,
         ...(model === "gemini-2.0-flash-exp-image-generation" && {
           config: {
             responseModalities: ["Text", "Image"],
