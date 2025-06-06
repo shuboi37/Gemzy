@@ -29,6 +29,6 @@ export const detectModel = async (req, res, next) => {
 
     next();
   } catch (error) {
-    return res.status(404).json({ message: error.message });
+    next(error);
   }
 };

@@ -121,7 +121,7 @@ export const handleGemini = async (req, res) => {
         model: model,
         contents:
           imagesArr.length > 0
-            ? createUserContent([...imagesArr, input.trim()])
+            ? createUserContent([...imagesArr, content])
             : content,
         ...(model === "gemini-2.0-flash-exp-image-generation" && {
           config: {
@@ -203,7 +203,7 @@ export const handleGemini = async (req, res) => {
       }
     }
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    next(error);
   }
 };
 //todos
