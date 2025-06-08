@@ -5,7 +5,7 @@ import {
 } from "../utils/geminiClient.js";
 import axios from "axios";
 
-export const handleGemini = async (req, res) => {
+export const handleGemini = async (req, res, next) => {
   try {
     const input = req.body.input;
     const model = req.model;
@@ -121,7 +121,7 @@ export const handleGemini = async (req, res) => {
         model: model,
         contents:
           imagesArr.length > 0
-            ? createUserContent([...imagesArr, content])
+            ? createUserContent([...imagesArr, input.trim()])
             : content,
         ...(model === "gemini-2.0-flash-exp-image-generation" && {
           config: {
