@@ -70,7 +70,7 @@ export function PromptInputWithActions({
           {files.map((file, index) => (
             <div
               key={index}
-              className=" bg-black text-white text-pretty flex items-center gap-2 rounded-lg px-3 py-2 text-sm"
+              className=" bg-gray-800 text-white text-pretty flex items-center gap-2 rounded-lg px-3 py-2 text-sm"
             >
               <Paperclip className="size-4" />
               <span className="max-w-[120px] truncate">{file.name}</span>
