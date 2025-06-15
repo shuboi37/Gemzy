@@ -1,184 +1,272 @@
-# ========================
-# OS-specific files
-# ========================
-# macOS
+# ----------------------------------------
+# SYSTEM FILES
+# ----------------------------------------
 .DS_Store
-
-# Windows
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+
+# macOS
+.AppleDouble
+.LSOverride
+Icon?
+.Trashes
+._*
+.Spotlight-V100
+.fseventsd
+
+# Windows
+*.lnk
+*.bak
+*.tmp
+*.swp
+*.swo
+*.swn
+*.~*
 
 # Linux
-*~ 
-.nfs*
+*~
 
-# ========================
-# Node.js
-# ========================
+# ----------------------------------------
+# NODE / JAVASCRIPT / TYPESCRIPT
+# ----------------------------------------
 node_modules/
+dist/
+build/
+.cache/
+.next/
+out/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
-.env
-.env.*.local
+pnpm-debug.log*
+.vite/
+*.tsbuildinfo
 
-# ========================
-# Python
-# ========================
+# Environment files
+.env
+.env.*
+!.env.example
+
+# ----------------------------------------
+# PYTHON
+# ----------------------------------------
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-.Python
-env/
+*.pyc
+*.pdb
+*.egg
+*.egg-info/
+.eggs/
 venv/
+env/
 ENV/
-.venv/
 pip-log.txt
 pip-delete-this-directory.txt
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+.mypy_cache/
+.pyre/
+.dmypy.json
+.pytype/
+.idea/
 
-# ========================
-# Java
-# ========================
+# Jupyter
+.ipynb_checkpoints
+
+# ----------------------------------------
+# JAVA / GRADLE / MAVEN
+# ----------------------------------------
 *.class
 *.jar
 *.war
 *.ear
 *.iml
-*.log
-*.jks
+*.ipr
+*.iws
 target/
+bin/
 build/
+.gradle/
+.settings/
+*.log
 
-# ========================
-# C / C++
-# ========================
-*.out
+# ----------------------------------------
+# C / C++ / CMake / Make
+# ----------------------------------------
 *.o
 *.obj
-*.exe
-*.dll
 *.so
-
-# ========================
-# Go
-# ========================
-bin/
+*.dll
 *.exe
-*.test
 *.out
-vendor/
+*.a
+*.lib
+*.dSYM/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+build/
+compile_commands.json
 
-# ========================
-# Rust
-# ========================
+# ----------------------------------------
+# RUST
+# ----------------------------------------
 /target/
-/Cargo.lock
+**/*.rs.bk
 
-# ========================
-# PHP
-# ========================
-vendor/
-composer.lock
+# ----------------------------------------
+# GOLANG
+# ----------------------------------------
+/bin/
+/pkg/
+/coverage.out
 
-# ========================
-# Ruby
-# ========================
-*.gem
-*.rbc
-.bundle/
-vendor/bundle/
-log/
-tmp/
-
-# ========================
-# .NET
-# ========================
-bin/
-obj/
+# ----------------------------------------
+# DOTNET / C#
+# ----------------------------------------
+*.dll
+*.pdb
+*.exe
 *.user
 *.suo
-*.sdf
 *.cache
-*.log
-*.vspscc
-*.vssscc
-.vscode/
-.vs/
+*.vs/
+obj/
+bin/
+project.lock.json
+project.fragment.lock.json
 
-# ========================
-# IDEs & Editors
-# ========================
-# VSCode
+# ----------------------------------------
+# FRONTEND / DESIGN / VITE / REACT / NEXT
+# ----------------------------------------
 .vscode/
-.history/
-.code-workspace
-
-# JetBrains IDEs
 .idea/
-*.iml
-*.iws
-
-# Sublime Text
-*.sublime-workspace
-*.sublime-project
-
-# Vim
-*.swp
-*.swo
-
-# Emacs
-*~
-# Backup files
-*.bak
-
-# ========================
-# Logs & Databases
-# ========================
-*.log
-*.sql
-*.sqlite
-
-# ========================
-# Frontend Build Artifacts
-# ========================
-dist/
-build/
-.cache/
-.next/
-.nuxt/
-out/
 coverage/
-*.tsbuildinfo
-
-# ========================
-# Miscellaneous
-# ========================
+*.log
+npm-debug.log*
+.eslintcache
+stylelintcache
+.cache/
+.sass-cache/
+postcss.config.js
+tailwind.config.js
+*.map
 *.lock
-*.pid
-*.seed
-*.pid.lock
-*.tgz
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ----------------------------------------
+# DATABASE / DATA
+# ----------------------------------------
+*.sqlite
+*.sqlite3
+*.db
+*.mdb
+*.bak
+*.sql
+*.dump
+
+# ----------------------------------------
+# LOG / TEMP FILES
+# ----------------------------------------
+*.log
+*.tmp
+*.temp
+*.bak
+*.old
+*.orig
+
+# ----------------------------------------
+# IMAGE / DESIGN SOFTWARE FILES
+# ----------------------------------------
+*.psd
+*.xcf
+*.ai
+*.sketch
+*.fig
+*.svg~
+
+# ----------------------------------------
+# ARCHIVES / COMPRESSED FILES
+# ----------------------------------------
+*.7z
 *.gz
 *.zip
 *.tar
-*.7z
+*.tgz
 *.rar
 
-# ========================
-# Optional: OS or editor folders
-# ========================
+# ----------------------------------------
+# MONOREPOS / LERNA / TURBOREPO
+# ----------------------------------------
+.pnpm-store/
+.turbo/
+.eslintcache
+.cache/
+
+# ----------------------------------------
+# JETBRAINS / INTELLIJ IDEs
+# ----------------------------------------
 .idea/
+*.iml
+*.ipr
+*.iws
+
+# ----------------------------------------
+# TESTING / COVERAGE
+# ----------------------------------------
+coverage/
+.nyc_output/
+test-results/
+*.lcov
+
+# ----------------------------------------
+# OTHER TOOLS
+# ----------------------------------------
+*.bak
+*.swp
+*.swo
+*.swn
+*.orig
+*.rej
 *.tmp
 
-# ========================
-# Custom .env files
-# ========================
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Editor folders
+.vscode/
+*.code-workspace
+
+# Docker
+Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+*.dockerfile
+.dockerignore
+
+# Local Secrets
+secrets.*
+*.key
+*.pem
+*.crt
+
+# Git hooks
+.husky/_/
+
+# ----------------------------------------
+# OPTIONAL
+# Uncomment below if needed
+# ----------------------------------------
+# package-lock.json
+# yarn.lock
+# *.lock
