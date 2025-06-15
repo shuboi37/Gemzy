@@ -154,7 +154,6 @@ export const handleGemini = async (req, res, next) => {
         return res.json({
           response: finalResponse,
           textWithPic,
-
           imageDataSrc,
           model,
         });
