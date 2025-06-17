@@ -77,7 +77,7 @@ export function PromptInputWithActions({
               {console.log(file.name)}
               <button
                 onClick={() => handleRemoveFile(index)}
-                className="hover:bg-secondary/50 rounded-full p-1"
+                className="hover:bg-black rounded-full p-1"
               >
                 <X className="size-4" />
               </button>
@@ -107,14 +107,16 @@ export function PromptInputWithActions({
             </label>
           </PromptInputAction>
           <PromptInputAction tooltip="Choose model">
-            <ModelDropdown
-              onFlashClick={() => setModel("gemini-2.0-flash")}
-              onImageGenClick={() =>
-                setModel("gemini-2.0-flash-exp-image-generation")
-              }
-              onDeepClick={() => setModel("deepseek/deepseek-chat-v3-0324")}
-              model={model}
-            />
+            <div>
+              <ModelDropdown
+                onFlashClick={() => setModel("gemini-2.0-flash")}
+                onImageGenClick={() =>
+                  setModel("gemini-2.0-flash-exp-image-generation")
+                }
+                onDeepClick={() => setModel("deepseek/deepseek-chat-v3-0324")}
+                model={model}
+              />
+            </div>
           </PromptInputAction>
         </div>
 
@@ -125,7 +127,7 @@ export function PromptInputWithActions({
             <Button
               variant="default"
               size="icon"
-              className="h-8 w-8 rounded-full hover:bg-gray-500 fill-current"
+              className="h-8 w-8 rounded-full hover:bg-gray-300 fill-current"
               onClick={onSubmit}
             >
               {loading ? (

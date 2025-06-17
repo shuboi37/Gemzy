@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Textarea } from "./components/ui/TextArea";
 import { PromptInputWithActions } from "./components/inputBox-demo";
@@ -12,6 +12,8 @@ function App() {
   const [files, setFiles] = useState([]);
 
   const [onlyText, setOnlyText] = useState(false);
+
+  const inputRef = useRef(null);
 
   async function fetcher() {
     try {
@@ -57,6 +59,10 @@ function App() {
     fetcher();
   };
 
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
   return (
     <div className="flex flex-col h-screen px-4 py-10 space-y-12 items-center">
       {!response && (
@@ -74,7 +80,7 @@ function App() {
           value={input}
           loading={loading}
           onSubmit={onSubmitHandler}
-          disabled={!imageDataSrc && loading}
+          disabled={loading}
         />
       </div>
 

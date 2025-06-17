@@ -83,6 +83,7 @@ function PromptInputTextarea({
     if (disableAutosize) return;
 
     if (!textareaRef.current) return;
+    textareaRef.current?.focus();
     textareaRef.current.style.height = "auto";
     textareaRef.current.style.height =
       typeof maxHeight === "number"
@@ -106,7 +107,7 @@ function PromptInputTextarea({
       onKeyDown={handleKeyDown}
       className={cn(
         `text-black placeholder:text-gray-600
-        font-semibold min-h-[52px] w-full resize-none border-none bg-gray-300 shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0`,
+        font-semibold min-h-[70px] w-full resize-none border-none bg-gray-300 shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0`,
         className
       )}
       rows={1}
@@ -127,7 +128,7 @@ function PromptInputActions({ children, className, ...props }) {
 function PromptInputAction({
   tooltip,
   children,
-  className,
+  className = "bg-black text-white",
   side = "top",
   ...props
 }) {
