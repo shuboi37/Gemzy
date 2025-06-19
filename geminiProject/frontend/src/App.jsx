@@ -13,13 +13,11 @@ function App() {
 
   const [onlyText, setOnlyText] = useState(false);
 
-  const inputRef = useRef(null);
-
   async function fetcher() {
     try {
       if (input.trim() || files.length > 0) {
         setLoading(true);
-        setImageDataSrc("");
+        setImageDataSrc((prev) => prev);
 
         const formdata = new FormData();
         formdata.append("input", input);
@@ -59,10 +57,6 @@ function App() {
     fetcher();
   };
 
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
   return (
     <div className="flex flex-col h-screen px-4 py-10 space-y-12 items-center">
       {!response && (
@@ -86,17 +80,17 @@ function App() {
 
       <div className="bg-black w-full max-w-3xl mt-10 flex flex-col items-center space-y-6">
         {response &&
-          (imageDataSrc ? (
-            <div className="flex flex-col space-y-4 items-center">
+          (imageDataSrc || onlyText ? (
+            <div className="flex flex-col space-y-4 items-center p-6">
               {onlyText && (
                 <p className="font-semibold text-white px-4 py-3">{response}</p>
               )}
               <img
                 src={imageDataSrc}
                 alt="Gemini Image"
-                className="rounded-md shadow-md mb-4"
-                width="250px"
-                height="250px"
+                className="rounded-md shadow-md"
+                // width="314px"
+                // height="476px"
               />
             </div>
           ) : (
@@ -104,7 +98,7 @@ function App() {
               value={response}
               readOnly
               placeholder="Your response...."
-              className="text-white font-semibold border-2 border-red-800 px-6 py-3 bg-neutral-900 w-full "
+              className="text-white font-semibold border border-gray-100 px-6 py-3 bg-neutral-950 w-full "
             />
           ))}
       </div>
