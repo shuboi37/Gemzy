@@ -69,11 +69,11 @@ export const handleGemini = async (req, res, next) => {
       }
 
       if (files.length > 0) {
-        const pdfArr = files.some(
-          (file) => file.mimetype === "application/pdf"
-        );
+        // const pdfArr = files.some(
+        //   (file) => file.mimetype === "application/pdf"
+        // );
         for (const fileObj of files) {
-          console.log(fileObj);
+          console.log("fileObj:", fileObj);
 
           const isImg =
             fileObj.mimetype.split("/")[0] === "image" ? true : false;
@@ -85,6 +85,7 @@ export const handleGemini = async (req, res, next) => {
               ? { mimeType: fileObj.mimetype }
               : { displayName: fileObj.originalname },
           });
+          console.log("File:", file);
           if (!isImg) {
             console.log("hi");
 
@@ -104,24 +105,29 @@ export const handleGemini = async (req, res, next) => {
 
             if (file.uri && file.mimeType) {
               const fileContent = createPartFromUri(file.uri, file.mimeType);
-              console.log(fileContent);
+              console.log("Filecontent", fileContent);
 
               content.push(fileContent);
+              console.log("Content: ", content);
             }
           } else {
             if (file.uri && file.mimeType) {
               imagesArr.push(createPartFromUri(file.uri, file.mimeType));
             }
+            console.log("ImagesArr: ", imagesArr);
           }
         }
       }
+      const mergedContent = [
+        { text: input.trim() },
+        ...content.filter((cont) => typeof cont !== "string"),
+        ...imagesArr,
+      ];
 
       const response = await ai.models.generateContent({
-        model: model,
-        contents:
-          imagesArr.length > 0
-            ? createUserContent([...imagesArr, input.trim()])
-            : content,
+        model,
+        contents: createUserContent(mergedContent),
+
         ...(model === "gemini-2.0-flash-exp-image-generation" && {
           config: {
             responseModalities: ["Text", "Image"],
