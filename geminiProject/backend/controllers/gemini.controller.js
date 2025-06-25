@@ -69,6 +69,9 @@ export const handleGemini = async (req, res, next) => {
       }
 
       if (files.length > 0) {
+        const pdfArr = files.some(
+          (file) => file.mimetype === "application/pdf"
+        );
         for (const fileObj of files) {
           console.log(fileObj);
 
@@ -78,13 +81,9 @@ export const handleGemini = async (req, res, next) => {
 
           const file = await ai.files.upload({
             file: new Blob([fileObj.buffer], { type: fileObj.mimetype }),
-            ...(isImg && {
-              config: {
-                mimeType: fileObj.mimetype,
-              },
-            }),
-
-            config: { displayName: fileObj.originalname },
+            config: isImg
+              ? { mimeType: fileObj.mimetype }
+              : { displayName: fileObj.originalname },
           });
           if (!isImg) {
             console.log("hi");
