@@ -9,7 +9,7 @@ function App() {
   const [model, setModel] = useState("gemini-2.0-flash");
   const [imageDataSrc, setImageDataSrc] = useState("");
   const [loading, setLoading] = useState(false);
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<File[]>([]);
 
   const [onlyText, setOnlyText] = useState(false);
 
@@ -70,7 +70,9 @@ function App() {
           setModel={setModel}
           files={files}
           setFiles={setFiles}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setInput(e.target.value)
+          }
           value={input}
           loading={loading}
           onSubmit={onSubmitHandler}

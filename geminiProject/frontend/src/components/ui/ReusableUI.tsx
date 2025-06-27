@@ -1,8 +1,6 @@
 "use client";
 
-import * as React from "react";
 // import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
-import { useState } from "react";
 
 import {
   DropdownMenu,
@@ -14,45 +12,29 @@ import {
 } from "./dropdown-menu";
 
 export function DropdownSVG() {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
-    <div
-      onClick={() => setIsOpen((prev) => !prev)}
-      className="cursor-pointer w-fit"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 512 512"
-        width="30"
-        height="30"
-      >
-        {/* Background circle */}
-        <circle cx="256" cy="256" r="256" fill="#d1d5db" />
-        <g
-          style={{
-            transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-            transformOrigin: "256px 256px",
-            transition: "transform 0.3s ease",
-          }}
-        >
-          {/* Arrow */}
-          <path
-            d="M135 241c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l87 87 87-87c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L273 345c-9.4 9.4-24.6 9.4-33.9 0L135 241z"
-            fill="#000"
-          />
-        </g>
-      </svg>
-    </div>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      width="30"
+      height="30"
+    ></svg>
   );
 }
+
+type ModelDropdownProps = {
+  onFlashClick: () => void;
+  onImageGenClick: () => void;
+  onDeepClick: () => void;
+  model: string;
+};
 
 export function ModelDropdown({
   onFlashClick,
   onImageGenClick,
   onDeepClick,
   model,
-}) {
+}: ModelDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

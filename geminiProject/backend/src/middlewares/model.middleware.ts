@@ -1,9 +1,15 @@
 import { ai } from "../utils/geminiClient.js";
-export const detectModel = async (req, res, next) => {
+import type { Request, Response, NextFunction } from "express";
+
+export const detectModel = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const input = req.body.input;
-    let finalModel = req.body.model;
-    const files = req.files;
+    const { input, model } = req.body as { input: string; model: string };
+    let finalModel = model;
+    const files = req.files as Express.Multer.File[] | undefined;
 
     const regex =
       /(?:https?:\/\/)?(?:www\.)?[\w-]+(?:\.[\w.-]+)+(?:\/[\w\-./?%&=]*)?\.pdf/gi;

@@ -1,16 +1,31 @@
+import type { Request, Response, NextFunction, Express } from "express";
+
 import {
   ai,
   createPartFromUri,
   createUserContent,
 } from "../utils/geminiClient.js";
 import axios from "axios";
+import { Part } from "@google/genai";
 
-export const handleGemini = async (req, res, next) => {
+interface CustomRequest extends Request {
+  body: {
+    input: string;
+  };
+  model: string;
+  files: Express.Multer.File[];
+}
+
+export const handleGemini = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const input = req.body.input;
     const model = req.model;
     const files = req.files || [];
-    let content = [input];
+    let content: (string | Part)[] = [input];
     const imagesArr = [];
     // console.log("hi");
 
@@ -33,7 +48,8 @@ export const handleGemini = async (req, res, next) => {
         content = [cleanedPrompt];
 
         for (const url of urls) {
-          const displayName = url.split("/").pop().split("?")[0].split("#")[0];
+          const displayName =
+            url.split("/").pop()?.split("?")[0].split("#")[0] ?? "file.pdf";
           const pdfBuffer = await fetch(url).then((response) =>
             response.arrayBuffer()
           );
@@ -46,6 +62,9 @@ export const handleGemini = async (req, res, next) => {
           });
 
           // Wait for the file to be processed.
+          if (!file.name) {
+            throw new Error("File name is missing!");
+          }
           let getFile = await ai.files.get({ name: file.name });
 
           while (getFile.state === "PROCESSING") {
@@ -88,7 +107,9 @@ export const handleGemini = async (req, res, next) => {
           console.log("File:", file);
           if (!isImg) {
             console.log("hi");
-
+            if (!file.name) {
+              throw new Error("File name is missing!");
+            }
             let getFile = await ai.files.get({ name: file.name });
             while (getFile.state === "PROCESSING") {
               getFile = await ai.files.get({ name: file.name });
@@ -141,7 +162,7 @@ export const handleGemini = async (req, res, next) => {
         let finalResponse = "";
         let imageDataSrc = "";
         let textWithPic = false;
-        for (const part of response.candidates[0]?.content?.parts || []) {
+        for (const part of response.candidates?.[0]?.content?.parts || []) {
           // Based on the part type, either show the text or save the image
           if (part.text) {
             finalResponse = part.text;
@@ -202,8 +223,12 @@ export const handleGemini = async (req, res, next) => {
         // console.log(reply);
 
         return res.json({ response: reply, model: model });
-      } catch (error) {
-        return res.json({ message: error.message });
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          return res.json({ message: error.message });
+        } else {
+          return res.json({ message: "Something went wrong...." });
+        }
       }
     }
   } catch (error) {

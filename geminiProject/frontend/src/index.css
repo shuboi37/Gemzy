@@ -2,26 +2,4 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .shimmer-text {
-    background: linear-gradient(
-      to right,
-      var(--muted-foreground) 40%,
-      var(--foreground) 60%,
-      var(--muted-foreground) 80%
-    );
-    background-size: 200% auto;
-    background-clip: text;
-    color: transparent;
-    animation: shimmer-text 4s infinite linear;
-  }
-}
 
-@keyframes shimmer-text {
-  0% {
-    background-position: 150% center;
-  }
-  100% {
-    background-position: -150% center;
-  }
-}

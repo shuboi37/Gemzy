@@ -8,9 +8,21 @@ import {
 } from "./ui/InputBox";
 import { Button } from "./ui/Button";
 import { ArrowUp, Paperclip, Square, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
-import { ModelDropdown } from "../components/ui/ReusableUI";
+import { ModelDropdown } from "./ui/ReusableUI";
+
+type PromptInputWithActionsProps = {
+  model: string;
+  setModel: (model: string) => void;
+  files: File[];
+  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  value: string;
+  loading: boolean;
+  onChange: () => void;
+  onSubmit: () => void;
+  disabled: boolean;
+};
 
 export function PromptInputWithActions({
   model,
@@ -22,13 +34,13 @@ export function PromptInputWithActions({
   onChange,
   onSubmit,
   disabled,
-}) {
+}: PromptInputWithActionsProps) {
   // const [input, setInput] = useState("");
   // const [isLoading, setIsLoading] = useState(false);
   // const [files, setFiles] = useState([]);
-  const uploadInputRef = useRef(null);
+  const uploadInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const newFiles = Array.from(event.target.files);
       setFiles((prev) => [...prev, ...newFiles]);
@@ -38,7 +50,7 @@ export function PromptInputWithActions({
     }
   };
 
-  const handleRemoveFile = (index) => {
+  const handleRemoveFile = (index: number) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
     if (uploadInputRef?.current) {
       uploadInputRef.current.value = "";
@@ -46,14 +58,15 @@ export function PromptInputWithActions({
   };
 
   useEffect(() => {
-    const globalEnterListener = (e) => {
+    const globalEnterListener = (e: React.KeyboardEvent) => {
       if (e.key === "Enter" && !e.shiftKey && files.length > 0 && !loading) {
         e.preventDefault();
-        onSubmit?.(e);
+        onSubmit?.();
       }
     };
-    window.addEventListener("keydown", globalEnterListener);
-    return () => window.removeEventListener("keydown", globalEnterListener);
+    window.addEventListener("keydown", () => globalEnterListener);
+    return () =>
+      window.removeEventListener("keydown", () => globalEnterListener);
   }, [files, loading, onSubmit]);
 
   return (
@@ -74,7 +87,10 @@ export function PromptInputWithActions({
             >
               <Paperclip className="size-4" />
               <span className="max-w-[120px] truncate">{file.name}</span>
-              {console.log(file.name)}
+              {(() => {
+                console.log(file.name);
+                return null;
+              })()}
               <button
                 onClick={() => handleRemoveFile(index)}
                 className="hover:bg-black rounded-full p-1"

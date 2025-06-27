@@ -5,7 +5,9 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "packageManager": "pnpm@10.12.1",
   "keywords": [],
@@ -20,5 +22,13 @@
     "form-data": "^4.0.2",
     "multer": "^1.4.5-lts.2",
     "nodemon": "^3.1.10"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/multer": "^1.4.13",
+    "@types/node": "^24.0.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }
