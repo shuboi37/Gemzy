@@ -8,16 +8,15 @@ import {
 import axios from "axios";
 import { Part } from "@google/genai";
 
-interface CustomRequest extends Request {
+interface GeminiRequest extends Request {
   body: {
     input: string;
   };
-  model: string;
-  files: Express.Multer.File[];
+  files?: Express.Multer.File[];
 }
 
 export const handleGemini = async (
-  req: CustomRequest,
+  req: GeminiRequest,
   res: Response,
   next: NextFunction
 ) => {
