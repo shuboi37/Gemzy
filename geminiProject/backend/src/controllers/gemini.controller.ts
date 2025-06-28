@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction, Express } from "express";
-
+import dotenv from "dotenv";
 import {
   ai,
   createPartFromUri,
@@ -7,23 +7,21 @@ import {
 } from "../utils/geminiClient.js";
 import axios from "axios";
 import { Part } from "@google/genai";
+import path from "path";
 
-interface GeminiRequest extends Request {
-  body: {
-    input: string;
-  };
-  files?: Express.Multer.File[];
-}
+dotenv.config({ path: path.resolve("src/config/.env") });
 
 export const handleGemini = async (
-  req: GeminiRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const input = req.body.input;
-    const model = req.model;
-    const files = req.files || [];
+    const model = req.model!;
+    const files: Express.Multer.File[] = Array.isArray(req.files)
+      ? req.files
+      : [];
     let content: (string | Part)[] = [input];
     const imagesArr = [];
     // console.log("hi");
@@ -36,7 +34,7 @@ export const handleGemini = async (
         /(?:https?:\/\/)?(?:www\.)?[\w-]+(?:\.[\w.-]+)+(?:\/[\w\-./?%&=]*)?\.pdf/gi;
       const matches = input.match(regex);
       if (matches) {
-        const urls = matches.map((url) =>
+        const urls = matches.map((url: string) =>
           url.startsWith("http") ? url : "https://" + url
         );
         let cleanedPrompt = input;
@@ -176,22 +174,24 @@ export const handleGemini = async (
           }
           console.log(part);
         }
-        return res.json({
+        res.json({
           response: finalResponse,
           textWithPic,
           imageDataSrc,
           model,
         });
+        return;
       } else {
         const finalResponse = response.text;
-        return res.json({
+        res.json({
           response: finalResponse,
           model,
         });
+        return;
       }
     } else {
       try {
-        // console.log("deep");
+        console.log("deep");
 
         const response = await axios.post(
           "https://openrouter.ai/api/v1/chat/completions",
@@ -219,14 +219,17 @@ export const handleGemini = async (
         }
 
         const reply = response.data.choices?.[0]?.message?.content;
-        // console.log(reply);
+        console.log(reply);
 
-        return res.json({ response: reply, model: model });
+        res.json({ response: reply, model: model });
+        return;
       } catch (error: unknown) {
         if (error instanceof Error) {
-          return res.json({ message: error.message });
+          res.json({ message: error.message });
+          return;
         } else {
-          return res.json({ message: "Something went wrong...." });
+          res.json({ message: "Something went wrong...." });
+          return;
         }
       }
     }
