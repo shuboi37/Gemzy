@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { Textarea } from "./components/ui/TextArea";
 import { PromptInputWithActions } from "./components/inputBox-demo";
@@ -47,16 +47,18 @@ function App() {
         setFiles([]);
       }
     } catch (error) {
-      throw new Error(`Error: ${error.message}`);
+      if (error instanceof Error) {
+        throw new Error(`Error: ${error.message}`);
+      } else {
+        throw new Error("Something went wrong....");
+      }
     } finally {
       setLoading(false);
     }
   }
-
   const onSubmitHandler = () => {
     fetcher();
   };
-
   return (
     <div className="flex flex-col h-screen px-4 py-10 space-y-12 items-center">
       {!response && (
@@ -70,7 +72,7 @@ function App() {
           setModel={setModel}
           files={files}
           setFiles={setFiles}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
             setInput(e.target.value)
           }
           value={input}

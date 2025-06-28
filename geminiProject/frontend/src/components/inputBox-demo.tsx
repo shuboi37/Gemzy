@@ -19,7 +19,7 @@ type PromptInputWithActionsProps = {
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
   value: string;
   loading: boolean;
-  onChange: () => void;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSubmit: () => void;
   disabled: boolean;
 };
@@ -102,7 +102,7 @@ export function PromptInputWithActions({
         </div>
       )}
 
-      <PromptInputTextarea placeholder="What's on your mind?" />
+      <PromptInputTextarea />
 
       <PromptInputActions className="flex items-center justify-between gap-2 pt-2">
         <div className="flex items-center gap-4">

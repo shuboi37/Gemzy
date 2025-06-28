@@ -15,10 +15,22 @@ export function DropdownSVG() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 512 512"
-      width="30"
-      height="30"
-    ></svg>
+      width="25"
+      height="25"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#000"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="icon icon-tabler icons-tabler-outline icon-tabler-select"
+    >
+      {/* Circle outline */}
+      <circle cx="12" cy="12" r="10" />
+
+      {/* Centered downward chevron */}
+      <path d="M9 12l3 3l3-3" />
+    </svg>
   );
 }
 

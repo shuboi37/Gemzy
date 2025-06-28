@@ -13,7 +13,7 @@ import React, { createContext, useContext, useEffect, useRef } from "react";
 const PromptInputContext = createContext({
   isLoading: false,
   value: "",
-  onChange: () => {},
+  onChange: (_e: React.ChangeEvent<HTMLTextAreaElement>) => {},
   maxHeight: 240,
   onSubmit: () => {},
   disabled: false,
@@ -32,7 +32,7 @@ type PromptInputProps = {
   loading: boolean;
   maxHeight?: number;
   value: string;
-  onChange: () => void;
+  onChange: (_e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSubmit: () => void;
   disabled: boolean;
   children: React.ReactNode;
@@ -77,14 +77,14 @@ type PromptInputTextareaProps = {
   className?: string;
   onKeyDown?: (e: React.KeyboardEvent) => void;
   disableAutosize?: boolean;
-  placeholder: string;
+  placeholder?: string;
 };
 
 function PromptInputTextarea({
   className,
   onKeyDown,
   disableAutosize = false,
-  placeholder,
+  placeholder = "What's on your mind?",
 
   ...props
 }: PromptInputTextareaProps) {
@@ -116,14 +116,15 @@ function PromptInputTextarea({
     <Textarea
       ref={textareaRef}
       value={value}
-      onChange={onChange}
+      onChange={(e) => onChange?.(e)}
       onKeyDown={handleKeyDown}
       className={cn(
-        `text-black placeholder:text-gray-600
-        font-semibold min-h-[70px] w-full resize-none border-none bg-gray-300 shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0`,
+        `text-black placeholder:text-gray-500
+        font-semibold min-h-[80px] w-full resize-none border-none bg-gray-300 shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0`,
         className
       )}
       rows={1}
+      placeholder={placeholder}
       disabled={disabled} //....
       {...props}
     />
