@@ -153,6 +153,8 @@ type PromptInputActionProps = {
   children: React.ReactNode;
   className?: string;
   side?: "top" | "right" | "bottom" | "left";
+  tooltipOpen?: boolean;
+  setTooltipOpen?: (prev: boolean) => void;
 };
 
 function PromptInputAction({
@@ -160,12 +162,13 @@ function PromptInputAction({
   children,
   className = "bg-black text-white",
   side = "top",
+  tooltipOpen,
+  setTooltipOpen,
   ...props
 }: PromptInputActionProps) {
   const { disabled } = usePromptInput();
-
   return (
-    <Tooltip {...props}>
+    <Tooltip {...props} open={tooltipOpen} onOpenChange={setTooltipOpen}>
       <TooltipTrigger asChild disabled={disabled}>
         {children}
       </TooltipTrigger>

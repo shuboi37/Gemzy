@@ -8,7 +8,7 @@ import {
 } from "./ui/InputBox";
 import { Button } from "./ui/Button";
 import { ArrowUp, Paperclip, Square, X } from "lucide-react";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { ModelDropdown } from "./ui/ReusableUI";
 
@@ -39,6 +39,8 @@ export function PromptInputWithActions({
   // const [isLoading, setIsLoading] = useState(false);
   // const [files, setFiles] = useState([]);
   const uploadInputRef = useRef<HTMLInputElement>(null);
+
+  const [tooltipOpen, setTooltipOpen] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -122,7 +124,11 @@ export function PromptInputWithActions({
               <Paperclip className="text-primary size-5" />
             </label>
           </PromptInputAction>
-          <PromptInputAction tooltip="Choose model">
+          <PromptInputAction
+            tooltip="Choose model"
+            tooltipOpen={tooltipOpen}
+            setTooltipOpen={setTooltipOpen}
+          >
             <div>
               <ModelDropdown
                 onFlashClick={() => setModel("gemini-2.0-flash")}
@@ -131,6 +137,7 @@ export function PromptInputWithActions({
                 }
                 onGroqClick={() => setModel("llama-3.3-70b-versatile")}
                 model={model}
+                setTooltipOpen={setTooltipOpen}
               />
             </div>
           </PromptInputAction>

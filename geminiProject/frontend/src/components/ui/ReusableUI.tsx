@@ -23,7 +23,7 @@ export function DropdownSVG() {
       strokeWidth="1.75"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="icon rounded-2xl icon-tabler icons-tabler-outline icon-tabler-select hover:bg-gray-400"
+      className="icon cursor-pointer rounded-2xl icon-tabler icons-tabler-outline icon-tabler-select hover:bg-gray-400"
     >
       {/* Circle outline
       <circle cx="12" cy="12" r="10" /> */}
@@ -38,6 +38,7 @@ type ModelDropdownProps = {
   onImageGenClick: () => void;
   onGroqClick: () => void;
   model: string;
+  setTooltipOpen: (prev: boolean) => void;
 };
 
 export function ModelDropdown({
@@ -45,9 +46,10 @@ export function ModelDropdown({
   onImageGenClick,
   onGroqClick,
   model,
+  setTooltipOpen,
 }: ModelDropdownProps) {
   return (
-    <DropdownMenu>
+    <DropdownMenu onOpenChange={(open) => open && setTooltipOpen(false)}>
       <DropdownMenuTrigger asChild>
         <div>
           <DropdownSVG />
@@ -59,21 +61,21 @@ export function ModelDropdown({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuCheckboxItem
-          className="text-white hover:bg-gray-800"
+          className="text-white hover:bg-gray-800 focus:outline-none"
           checked={model === "gemini-2.0-flash"}
           onClick={onFlashClick}
         >
           Gemini-2.0-flash
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
-          className="text-white hover:bg-gray-800"
+          className="text-white hover:bg-gray-800 focus:outline-none"
           checked={model === "gemini-2.0-flash-exp-image-generation"}
           onClick={onImageGenClick}
         >
           Gemini-2.0-flash-exp-image-generation
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
-          className="text-white hover:bg-gray-800"
+          className="text-white hover:bg-gray-800 focus:outline-none"
           checked={model === "llama-3.3-70b-versatile"}
           onClick={onGroqClick}
         >
