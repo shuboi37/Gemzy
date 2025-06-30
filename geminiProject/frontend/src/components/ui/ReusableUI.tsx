@@ -15,21 +15,20 @@ export function DropdownSVG() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="25"
-      height="25"
+      width="32"
+      height="32"
       viewBox="0 0 24 24"
       fill="none"
       stroke="#000"
       strokeWidth="1.75"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="icon icon-tabler icons-tabler-outline icon-tabler-select"
+      className="icon rounded-2xl icon-tabler icons-tabler-outline icon-tabler-select hover:bg-gray-400"
     >
-      {/* Circle outline */}
-      <circle cx="12" cy="12" r="10" />
-
-      {/* Centered downward chevron */}
-      <path d="M9 12l3 3l3-3" />
+      {/* Circle outline
+      <circle cx="12" cy="12" r="10" /> */}
+      {/* Downward stretched chevron */}
+      <path d="M8 10l4 5l4-5" />
     </svg>
   );
 }
@@ -37,14 +36,14 @@ export function DropdownSVG() {
 type ModelDropdownProps = {
   onFlashClick: () => void;
   onImageGenClick: () => void;
-  onDeepClick: () => void;
+  onGroqClick: () => void;
   model: string;
 };
 
 export function ModelDropdown({
   onFlashClick,
   onImageGenClick,
-  onDeepClick,
+  onGroqClick,
   model,
 }: ModelDropdownProps) {
   return (
@@ -75,10 +74,10 @@ export function ModelDropdown({
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           className="text-white hover:bg-gray-800"
-          checked={model === "deepseek/deepseek-chat-v3-0324"}
-          onClick={onDeepClick}
+          checked={model === "llama-3.3-70b-versatile"}
+          onClick={onGroqClick}
         >
-          DeepSeek_V3
+          Llama-3.3-70b-versatile
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>

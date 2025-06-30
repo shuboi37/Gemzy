@@ -85,7 +85,7 @@ export function PromptInputWithActions({
               key={index}
               className=" bg-gray-800 text-white text-pretty flex items-center gap-2 rounded-lg px-3 py-2 text-sm"
             >
-              <Paperclip className="size-4" />
+              <Paperclip className="size-4 rounded-xl hover:bg-gray-400" />
               <span className="max-w-[120px] truncate">{file.name}</span>
               {(() => {
                 console.log(file.name);
@@ -109,7 +109,7 @@ export function PromptInputWithActions({
           <PromptInputAction tooltip="Attach files">
             <label
               htmlFor="file-upload"
-              className="hover:bg-secondary-foreground/10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-2xl"
+              className="hover:bg-gray-400 flex h-8 w-8 cursor-pointer items-center justify-center rounded-2xl"
             >
               <input
                 type="file"
@@ -129,7 +129,7 @@ export function PromptInputWithActions({
                 onImageGenClick={() =>
                   setModel("gemini-2.0-flash-exp-image-generation")
                 }
-                onDeepClick={() => setModel("deepseek/deepseek-chat-v3-0324")}
+                onGroqClick={() => setModel("llama-3.3-70b-versatile")}
                 model={model}
               />
             </div>
@@ -143,7 +143,7 @@ export function PromptInputWithActions({
             <Button
               variant="default"
               size="icon"
-              className="h-8 w-8 rounded-full hover:bg-gray-300 fill-current"
+              className="h-8 w-8 rounded-full hover:bg-gray-400 fill-current"
               onClick={onSubmit}
             >
               {loading ? (
