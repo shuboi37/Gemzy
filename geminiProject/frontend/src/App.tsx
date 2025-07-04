@@ -59,6 +59,11 @@ function App() {
   const onSubmitHandler = () => {
     fetcher();
   };
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+  };
+
   return (
     <div className="flex flex-col h-screen px-4 py-10 space-y-12 items-center">
       {!response && (
@@ -72,9 +77,7 @@ function App() {
           setModel={setModel}
           files={files}
           setFiles={setFiles}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-            setInput(e.target.value)
-          }
+          onChange={(e) => handleOnChange(e)}
           value={input}
           loading={loading}
           onSubmit={onSubmitHandler}
