@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext", // you're using ESM (because of "type": "module")
+    "module": "esnext",
     "moduleResolution": "node",
     "outDir": "./dist",
     "rootDir": "./src",

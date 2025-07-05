@@ -87,12 +87,22 @@ export const handleGemini = async (
     } else {
       try {
         console.log("groq");
-        const completion = await getGroqChatCompletion({ input, model });
-        console.log(completion);
-        const reply = completion.choices?.[0]?.message?.content || "";
-        // console.log(reply);
+        // let reply: string = "";
+        res.setHeader("Content-Type", "application/x-ndjson");
+        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Connection", "keep-alive");
+        const stream = await getGroqChatCompletion({ input, model });
+        console.log(stream);
+        for await (const chunk of stream) {
+          const delta = chunk.choices[0]?.delta?.content;
+          if (delta) {
+            console.log(delta);
+            res.write(JSON.stringify({ type: "delta", content: delta }) + "\n");
+          }
+        }
 
-        res.json({ response: reply, model });
+        res.write(JSON.stringify({ type: "meta", model }) + "\n");
+        res.end();
         return;
       } catch (error: unknown) {
         if (error instanceof Error) {

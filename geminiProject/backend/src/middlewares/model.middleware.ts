@@ -30,8 +30,8 @@ export const detectModel = async (
       finalModel =
         verdict && verdict.toLowerCase().includes("yes")
           ? "gemini-2.0-flash-exp-image-generation"
-          : finalModel === "deepseek/deepseek-chat-v3-0324"
-          ? "deepseek/deepseek-chat-v3-0324"
+          : finalModel === "llama-3.3-70b-versatile"
+          ? "llama-3.3-70b-versatile"
           : "gemini-2.0-flash";
     }
     req.model = finalModel;
