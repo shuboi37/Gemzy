@@ -26,24 +26,54 @@ function App() {
           formdata.append("files", file);
         });
 
-        const backendResponse = await axios.post(
-          "http://localhost:3000/api/response",
+        if (model.startsWith("gemini")) {
+          setResponse("");
+          setInput("");
+          const backendResponse = await axios.post(
+            "http://localhost:3000/api/response",
 
-          formdata,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+            formdata,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+          const data = await backendResponse.data;
+          setResponse(data?.response),
+            setOnlyText(data?.textWithPic),
+            setImageDataSrc(data?.imageDataSrc);
+          setModel(data?.model);
+        } else {
+          console.log("hiiiii");
+          setResponse("");
+          setInput("");
+          const stream = await fetch("http://localhost:3000/api/response", {
+            method: "POST",
+            body: formdata,
+          });
+
+          const reader = stream.body?.getReader();
+          const decoder = new TextDecoder("utf-8");
+
+          let fullText: string = "";
+          while (reader) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            const chunk = decoder.decode(value, { stream: true });
+            for (const line of chunk.trim().split("\n")) {
+              const json = JSON.parse(line);
+              if (json.type === "delta") {
+                fullText += json.content;
+                setResponse((prev) => prev + json.content);
+              } else if (json.type === "meta") {
+                setModel(json.model);
+              }
+            }
           }
-        );
+        }
 
-        const data = await backendResponse.data;
-        setResponse(data?.response),
-          setOnlyText(data?.textWithPic),
-          setImageDataSrc(data?.imageDataSrc);
-        setModel(data?.model);
-
-        setInput("");
         setFiles([]);
       }
     } catch (error) {
