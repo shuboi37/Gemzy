@@ -39,7 +39,7 @@ export function PromptInputWithActions({
   // const [isLoading, setIsLoading] = useState(false);
   // const [files, setFiles] = useState([]);
   const uploadInputRef = useRef<HTMLInputElement>(null);
-
+  const [isOpen, setIsOpen] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,6 +138,8 @@ export function PromptInputWithActions({
                 onGroqClick={() => setModel("llama-3.3-70b-versatile")}
                 model={model}
                 setTooltipOpen={setTooltipOpen}
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
               />
             </div>
           </PromptInputAction>

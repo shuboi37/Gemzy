@@ -7,7 +7,7 @@ function App() {
   const [response, setResponse] = useState("");
   const [input, setInput] = useState("");
   const [model, setModel] = useState("gemini-2.0-flash");
-  const [imageDataSrc, setImageDataSrc] = useState("");
+  const [imageDataSrc, setImageDataSrc] = useState<string | undefined>("");
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
 
@@ -18,17 +18,26 @@ function App() {
       if (input.trim() || files.length > 0) {
         setLoading(true);
         setImageDataSrc((prev) => prev);
+        let updatedModel = model;
+        if (model === "llama-3.3-70b-versatile" && files.length > 0) {
+          updatedModel = "gemini-2.0-flash";
+          setModel(updatedModel);
+        }
 
         const formdata = new FormData();
         formdata.append("input", input);
-        formdata.append("model", model);
+        formdata.append("model", updatedModel);
         files.map((file) => {
           formdata.append("files", file);
         });
-
-        if (model.startsWith("gemini")) {
-          setResponse("");
+        console.log(formdata);
+        console.log("i ran again");
+        if (model.startsWith("gemini") || files.length > 0) {
+          setResponse((prev) => prev);
           setInput("");
+          console.log(model);
+
+          console.log("hii, in gemini");
           const backendResponse = await axios.post(
             "http://localhost:3000/api/response",
 
@@ -45,9 +54,12 @@ function App() {
             setOnlyText(data?.textWithPic),
             setImageDataSrc(data?.imageDataSrc);
           setModel(data?.model);
-        } else {
+        } else if (!files.length) {
           console.log("hiiiii");
-          setResponse("");
+          console.log(model);
+          setResponse((prev) => prev && "");
+          setImageDataSrc((prev) => prev && undefined);
+          setOnlyText((prev) => prev && false);
           setInput("");
           const stream = await fetch("http://localhost:3000/api/response", {
             method: "POST",
@@ -93,9 +105,9 @@ function App() {
   const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
   };
-
+  console.log(model);
   return (
-    <div className="flex flex-col h-screen px-4 py-10 space-y-12 items-center">
+    <div className="flex flex-col min-h-screen px-4 py-10 space-y-12 items-center">
       {!response && (
         <h1 className="text-white font-semibold text-pretty whitespace-pre-wrap text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight text-center">
           Say it. I’ll make it real.
