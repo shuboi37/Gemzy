@@ -19,20 +19,31 @@ function App() {
         setLoading(true);
         setImageDataSrc((prev) => prev);
         let updatedModel = model;
-        if (model === "llama-3.3-70b-versatile" && files.length > 0) {
+        console.log(input);
+        const regex =
+          /(?:https?:\/\/)?(?:www\.)?[\w-]+(?:\.[\w.-]+)+(?:\/[\w\-./?%&=]*)?\.pdf/gi;
+        const matches = input.match(regex);
+        console.log(matches);
+
+        if (
+          matches ||
+          (model === "llama-3.3-70b-versatile" && files.length > 0)
+        ) {
           updatedModel = "gemini-2.0-flash";
           setModel(updatedModel);
+          console.log("hola");
         }
 
         const formdata = new FormData();
         formdata.append("input", input);
         formdata.append("model", updatedModel);
+        formdata.append("matches", matches ? "true" : "false");
         files.map((file) => {
           formdata.append("files", file);
         });
         console.log(formdata);
         console.log("i ran again");
-        if (model.startsWith("gemini") || files.length > 0) {
+        if (model.startsWith("gemini") || files.length > 0 || matches) {
           setResponse((prev) => prev);
           setInput("");
           console.log(model);
