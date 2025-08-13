@@ -1,5 +1,3 @@
-import React from "react";
-
 export const Sidebar = () => {
-  return <div>Sidebar</div>;
+  return <div className="w-16 h-screen relative bg-black inset-0"></div>;
 };
