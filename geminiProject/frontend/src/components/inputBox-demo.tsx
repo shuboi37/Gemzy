@@ -35,12 +35,8 @@ export function PromptInputWithActions({
   onSubmit,
   disabled,
 }: PromptInputWithActionsProps) {
-  // const [input, setInput] = useState("");
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [files, setFiles] = useState([]);
   const uploadInputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [tooltipOpen, setTooltipOpen] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -124,12 +120,8 @@ export function PromptInputWithActions({
               <Paperclip className="text-primary size-5" />
             </label>
           </PromptInputAction>
-          <PromptInputAction
-            tooltip="Choose model"
-            tooltipOpen={tooltipOpen}
-            setTooltipOpen={setTooltipOpen}
-          >
-            <div>
+          <PromptInputAction tooltip="Choose Model" disabled={isOpen}>
+            <div className="cursor-pointer hover:bg-gray-400 rounded-2xl w-8 h-8">
               <ModelDropdown
                 onFlashClick={() => setModel("gemini-2.0-flash")}
                 onImageGenClick={() =>
@@ -137,7 +129,6 @@ export function PromptInputWithActions({
                 }
                 onGroqClick={() => setModel("llama-3.3-70b-versatile")}
                 model={model}
-                setTooltipOpen={setTooltipOpen}
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
               />

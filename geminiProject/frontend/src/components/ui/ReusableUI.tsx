@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
+// import { useState } from "react";
 
 type ModelDropdownProps = {
   onFlashClick: () => void;
@@ -19,7 +20,7 @@ type ModelDropdownProps = {
   model: string;
   isOpen: boolean;
   setIsOpen: (prev: boolean) => void;
-  setTooltipOpen: (prev: boolean) => void;
+  // setTooltipOpen: (prev: boolean) => void;
 };
 
 export function ModelDropdown({
@@ -30,18 +31,28 @@ export function ModelDropdown({
   isOpen,
   // onClick,
   setIsOpen,
-  setTooltipOpen,
-}: ModelDropdownProps) {
+}: // setTooltipOpen,
+ModelDropdownProps) {
+  // const [isOpen, setIsOpen] = useState(false)
   return (
     <DropdownMenu
       onOpenChange={(open) => {
-        setTooltipOpen(false);
+        // setTooltipOpen(false);
         setIsOpen(open);
       }}
       open={isOpen}
     >
       <DropdownMenuTrigger asChild>
-        <div>{isOpen ? <ChevronUp /> : <ChevronDown />}</div>
+        <div className="hover:bg-gray-400 rounded-2xl">
+          {isOpen ? (
+            <ChevronUp
+              className="w-8 h-8 bg-gray-400 rounded-2xl"
+              strokeOpacity="0.79"
+            />
+          ) : (
+            <ChevronDown className="w-8 h-8" strokeOpacity="0.79" />
+          )}
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="border-2 border-gray-700 w-48 translate-y-3 bg-black">
         <DropdownMenuLabel className="font-extralight text-white border-b-2 border-gray-700">
