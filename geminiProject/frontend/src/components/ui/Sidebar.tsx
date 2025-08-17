@@ -1,7 +1,14 @@
 import { useState } from "react";
 import LogoSVG from "./LogoSVG";
 import { MiniBar } from "./Minibar";
-import { PanelRightClose, PanelLeftClose, ChevronsDownUp } from "lucide-react";
+import {
+  PanelRightClose,
+  PanelLeftClose,
+  ChevronsDownUp,
+  Search,
+  MessageSquarePlus,
+  Images,
+} from "lucide-react";
 export const Sidebar = () => {
   const [isCollapsible, setIsCollapsible] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -19,10 +26,16 @@ export const Sidebar = () => {
     <div
       onClick={handleClick}
       className={`${
-        isOpen ? "w-68" : "w-14 cursor-e-resize"
+        isOpen ? "w-68" : "w-16 cursor-e-resize"
       } h-screen relative bg-neutral-900/85`}
     >
-      <div className="flex flex-col h-full items-center">
+      <div
+        className={`flex flex-col space-y-5 h-full items-center ${
+          isOpen
+            ? "bg-gradient-to-b from-neutral-900/85 via-neutral-700 to-neutral-900/85"
+            : ""
+        }`}
+      >
         <div className="flex items-center gap-28 w-full h-20 p-2">
           <button
             onClick={handleClick}
@@ -54,8 +67,33 @@ export const Sidebar = () => {
             </div>
           )}
         </div>
+        {isOpen && (
+          <div className="flex flex-col w-full overflow-hidden h-52 space-y-5">
+            <div className="w-full">
+              <span className="flex space-x-3 ml-4 items-center text-white">
+                <MessageSquarePlus className="w-7 h-7" />
+                <span className="text-[18px] -translate-y-[2.5px]  tracking-wide font-sans">
+                  New Chat
+                </span>
+              </span>
+            </div>
+            <span className="flex space-x-3 ml-4 w-full items-center text-white">
+              <Search className="w-7 h-7" />
+              <span className="text-[18px] -translate-y-[2.5px]  tracking-wide font-sans">
+                New Chat
+              </span>
+            </span>
+            <span className="flex space-x-3 ml-4 w-full items-center text-white">
+              <Images className="w-7 h-7" />
+              <span className="text-[18px] -translate-y-[2.5px]  tracking-wide font-sans">
+                New Chat
+              </span>
+            </span>
+          </div>
+        )}
       </div>
     </div>
   ) : (
-<MiniBar/>  );
+    <MiniBar setIsCollapsible={setIsCollapsible} />
+  );
 };
