@@ -39,16 +39,15 @@ export const Sidebar = () => {
       onClick={handleClick}
       className={`${
         isOpen ? "w-68" : "w-16 cursor-e-resize"
-      } h-screen relative bg-neutral-900/85`}
+      } h-screen bg-neutral-900/85 relative`}
     >
       <div
         className={`flex flex-col h-full items-center ${
           isOpen
-            ? "bg-gradient-to-b from-neutral-900/85 via-neutral-700 to-neutral-900/85"
+            ? "bg-gradient-to-b from-neutral-950 via-neutral-800 to-neutral-950"
             : ""
         }`}
       >
-        {/* Top Section - Header */}
         <div className="flex items-center gap-28 w-full h-20 p-2 flex-shrink-0">
           <button
             onClick={handleClick}
@@ -81,10 +80,8 @@ export const Sidebar = () => {
           )}
         </div>
 
-        {/* Middle Section - Scrollable Content */}
-        <div className="flex flex-col w-full flex-1 overflow-hidden">
-          {/* Navigation Buttons */}
-          {isOpen && (
+        <div className="flex flex-col w-full flex-1 overflow-hidden ">
+          {isOpen ? (
             <div className="flex flex-col w-full space-y-3 px-2 mb-4 mt-2">
               <button className="w-full rounded-3xl hover:bg-neutral-700 h-10">
                 <span className="flex p-2 space-x-3 ml-1 items-center text-white">
@@ -111,12 +108,28 @@ export const Sidebar = () => {
                 </span>
               </button>
             </div>
+          ) : (
+            <div className="flex flex-1 flex-col items-center mt-5 w-16 relative">
+              <div className="flex flex-col space-y-2 items-center h-[25%]">
+                <button className="hover:bg-neutral-700 rounded-lg p-3">
+                  <MessageSquarePlus className="flex-1 w-6 h-6 text-white transition-all ease-in-out duration-200 cursor-pointer" />
+                </button>
+                <button className="hover:bg-neutral-700 rounded-lg p-3">
+                  <Search className="flex-1 w-6 h-6 text-white transition-all ease-in-out duration-200 cursor-pointer" />
+                </button>
+                <button className="hover:bg-neutral-700 rounded-lg p-3">
+                  <Images className="flex-1 w-6 h-6 text-white transition-all ease-in-out duration-200 cursor-pointer" />
+                </button>
+              </div>
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-200 to-rose-600 flex items-center justify-center absolute bottom-3 cursor-pointer">
+                <User className="w-5 h-5 text-white" />
+              </div>
+            </div>
           )}
 
-          {/* Chats Section */}
           {isOpen && (
             <div className="flex flex-col w-full flex-1 overflow-hidden px-2">
-              <div className="w-full h-full flex flex-col">
+              <div className="w-full h-[396px] flex flex-col">
                 <button
                   onClick={() => setIsChatsExpanded(!isChatsExpanded)}
                   className="flex items-center justify-between w-full px-3 py-2 text-neutral-300/80 hover:text-white hover:bg-neutral-700/50 rounded-lg transition-all duration-200 flex-shrink-0"
@@ -168,11 +181,9 @@ export const Sidebar = () => {
           )}
         </div>
 
-        {/* Bottom Section - Profile (Fixed at bottom) */}
         {isOpen && (
-          <div className="w-full border-t border-neutral-700/50 bg-neutral-800/50 relative">
+          <div className="w-full border-t border-neutral-700/50 bg-neutral-800/50 absolute left-0 bottom-0">
             <div className="p-2">
-              {/* Profile Info */}
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-200 to-rose-600 flex items-center justify-center">
                   <User className="w-5 h-5 text-white" />
@@ -186,7 +197,6 @@ export const Sidebar = () => {
                   </div>
                 </div>
 
-                {/* Dropdown Menu */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="p-1 text-neutral-400 hover:text-white hover:bg-neutral-700/50 rounded transition-all duration-150">
@@ -194,20 +204,18 @@ export const Sidebar = () => {
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
-                    className="bg-slate-900 border-neutral-700 shadow-lg"
+                    className={`bg-slate-900 border-neutral-700 shadow-lg ${
+                      isOpen ? "w-[262px]" : "w-auto"
+                    }`}
                     side="top"
                     align="end"
                     sideOffset={12}
-                    style={{
-                      width: isOpen ? "260px" : "auto",
-                      // marginRight: "15px",
-                    }}
                   >
-                    <DropdownMenuItem className="text-white hover:bg-neutral-700 cursor-pointer">
+                    <DropdownMenuItem className="text-white hover:bg-neutral-700 outline-none cursor-pointer">
                       <Settings className="w-4 h-4 mr-2" />
                       Settings
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="text-white hover:bg-neutral-700 cursor-pointer">
+                    <DropdownMenuItem className="outline-none text-white hover:bg-neutral-700 cursor-pointer">
                       <LogOut className="w-4 h-4 mr-2" />
                       Sign out
                     </DropdownMenuItem>

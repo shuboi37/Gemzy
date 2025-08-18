@@ -1,7 +1,7 @@
 "use client";
 
 // import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -44,14 +44,12 @@ ModelDropdownProps) {
     >
       <DropdownMenuTrigger asChild>
         <div className="hover:bg-gray-400 rounded-2xl">
-          {isOpen ? (
-            <ChevronUp
-              className="w-8 h-8 bg-gray-400 rounded-2xl"
-              strokeOpacity="0.79"
-            />
-          ) : (
-            <ChevronDown className="w-8 h-8" strokeOpacity="0.79" />
-          )}
+          <ChevronUp
+            className={`${
+              isOpen ? "rotate-0" : "rotate-180"
+            } w-8 h-8 hover:bg-gray-400 rounded-2xl transition-all ease-in-out duration-150`}
+            strokeOpacity="0.79"
+          />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="border-2 border-gray-700 w-48 translate-y-3 bg-black">

@@ -1,6 +1,5 @@
 import React from "react";
 
-// Props: allow passing a className and rest props for flexibility
 type SVGProps = React.SVGProps<SVGSVGElement> & {
   className?: string;
 };
