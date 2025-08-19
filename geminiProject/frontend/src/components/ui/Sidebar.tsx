@@ -68,13 +68,13 @@ export const Sidebar = () => {
                 onClick={() => setIsCollapsible(true)}
                 className="p-2 hover:bg-neutral-700 rounded-lg"
               >
-                <ChevronsDownUp className="w-6 h-6 text-white" />
+                <ChevronsDownUp className="w-5 h-5 text-white" />
               </button>
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="p-2 hover:bg-neutral-700 rounded-lg"
               >
-                <PanelLeftClose className="w-7 h-7 text-white" />
+                <PanelLeftClose className="w-6 h-6 text-white" />
               </button>
             </div>
           )}
@@ -190,7 +190,7 @@ export const Sidebar = () => {
                 </div>
                 <div className="flex-1">
                   <div className="text-white font-medium text-sm truncate">
-                    Shubhankar Arun
+                    Shubhankar
                   </div>
                   <div className="text-neutral-400 text-xs truncate">
                     shubhankar@gemzy.ai

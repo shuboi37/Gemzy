@@ -81,7 +81,7 @@ export const MiniBar = ({
           "0 0 20px rgba(255, 255, 255, 0.08)",
       }}
     >
-      <div className="w-full h-full flex flex-col ">
+      <div className="w-full h-full py-3 flex flex-col ">
         <div className="flex flex-col rounded-3xl items-center h-full">
           <MessageSquarePlus className="flex-1 hover:bg-black/75 hover:scale-110 text-white p-2 rounded-3xl cursor-pointer w-10 h-10 transition-all ease-in-out " />
           <Search className="flex-1 hover:bg-black/75 hover:scale-110 text-white p-2 rounded-3xl cursor-pointer w-10 h-10 transition-all ease-in-out" />
