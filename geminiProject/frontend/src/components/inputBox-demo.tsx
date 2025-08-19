@@ -37,6 +37,7 @@ export function PromptInputWithActions({
 }: PromptInputWithActionsProps) {
   const uploadInputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDropOpen, setIsDropOpen] = useState(true);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -66,6 +67,7 @@ export function PromptInputWithActions({
     return () =>
       window.removeEventListener("keydown", () => globalEnterListener);
   }, [files, loading, onSubmit]);
+  console.log(model);
 
   return (
     <PromptInput
@@ -83,7 +85,13 @@ export function PromptInputWithActions({
               key={index}
               className=" bg-gray-800 text-white text-pretty flex items-center gap-2 rounded-lg px-3 py-2 text-sm"
             >
-              <Paperclip className="size-4 rounded-xl hover:bg-gray-400" />
+              <Paperclip
+                className={`size-4 rounded-xl ${
+                  model === "gemini-2.0-flash"
+                    ? "hover:bg-gray-400"
+                    : "pointer-events-none cursor-not-allowed"
+                }`}
+              />
               <span className="max-w-[120px] truncate">{file.name}</span>
               {(() => {
                 console.log(file.name);
@@ -107,7 +115,11 @@ export function PromptInputWithActions({
           <PromptInputAction tooltip="Attach files">
             <label
               htmlFor="file-upload"
-              className="hover:bg-gray-400 flex h-8 w-8 cursor-pointer items-center justify-center rounded-2xl"
+              className={`flex h-8 w-8 items-center justify-center rounded-2xl ${
+                model === "gemini-2.0-flash"
+                  ? "hover:bg-gray-400 cursor-pointer"
+                  : "pointer-events-none cursor-not-allowed opacity-50"
+              }`}
             >
               <input
                 type="file"
@@ -116,11 +128,16 @@ export function PromptInputWithActions({
                 className="hidden"
                 id="file-upload"
                 ref={uploadInputRef}
+                disabled={model !== "gemini-2.0-flash"}
               />
               <Paperclip className="text-primary size-5" />
             </label>
           </PromptInputAction>
-          <PromptInputAction tooltip="Choose Model" disabled={isOpen}>
+          <PromptInputAction
+            tooltip="Choose Model"
+            disabled={isOpen}
+            isDropOpen={isDropOpen}
+          >
             <div className="cursor-pointer hover:bg-gray-400 rounded-2xl w-8 h-8">
               <ModelDropdown
                 onFlashClick={() => setModel("gemini-2.0-flash")}
@@ -131,6 +148,8 @@ export function PromptInputWithActions({
                 model={model}
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
+                setIsDropOpen={setIsDropOpen}
+                files={files}
               />
             </div>
           </PromptInputAction>
