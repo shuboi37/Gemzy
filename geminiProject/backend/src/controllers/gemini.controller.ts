@@ -16,8 +16,8 @@ export const handleGemini = async (
   next: NextFunction
 ) => {
   try {
-    const input = req.body.input;
-    const model = req.model!;
+    const { input, model } = req.body;
+
     const files: Express.Multer.File[] = Array.isArray(req.files)
       ? req.files
       : [];

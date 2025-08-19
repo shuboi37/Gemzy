@@ -2,9 +2,7 @@ import type { Request, Response } from "express";
 import { getGroqChatCompletion } from "../services/groqServices";
 export const handleGroq = async (req: Request, res: Response) => {
   try {
-    const input = req.body.input;
-    const model = req.model!;
-
+    const { input, model } = req.body;
     console.log("groq");
     // let reply: string = "";
     res.setHeader("Content-Type", "application/x-ndjson");

@@ -17,7 +17,9 @@ export const getFileUploadService = async ({
     console.log(isImg);
 
     const file = await ai.files.upload({
-      file: new Blob([fileObj.buffer], { type: fileObj.mimetype }),
+      file: new Blob([new Uint8Array(fileObj.buffer)], {
+        type: fileObj.mimetype,
+      }),
       config: isImg
         ? { mimeType: fileObj.mimetype }
         : { displayName: fileObj.originalname },
@@ -38,7 +40,7 @@ export const getFileUploadService = async ({
           setTimeout(resolve, 5000);
         });
       }
-      if (file.state === "FAILED") {
+      if (getFile.state === "FAILED") {
         throw new Error("File processing failed.");
       }
 

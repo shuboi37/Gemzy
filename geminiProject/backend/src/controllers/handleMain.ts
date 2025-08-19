@@ -8,7 +8,7 @@ export const handleMain = async (
   next: NextFunction
 ) => {
   try {
-    const model = req.model!;
+    const model = req.body.model;
 
     if (model === "llama-3.3-70b-versatile") {
       handleGroq(req, res);

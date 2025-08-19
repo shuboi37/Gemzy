@@ -5,7 +5,6 @@ import { Express } from "express";
 declare global {
   namespace Express {
     interface Request {
-      model?: string;
       files?: Express.Multer.File[]; // Properly typed for multer
     }
   }
