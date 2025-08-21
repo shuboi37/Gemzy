@@ -14,6 +14,6 @@ app.use(cors());
 app.use("/api", geminiRouter);
 app.use(handleError);
 
-const port: string | number = process.env.PORT || 3001;
+const port: string | number = process.env.PORT || 3002;
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
