@@ -7,7 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./Tooltip";
-import { cn } from "../../lib/utils";
+import { cn } from "../../src/lib/utils";
 import React, { createContext, useContext, useEffect, useRef } from "react";
 
 const PromptInputContext = createContext({

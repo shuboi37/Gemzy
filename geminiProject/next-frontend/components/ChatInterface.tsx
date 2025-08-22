@@ -42,7 +42,6 @@ export default function ChatInterface({}: ChatInterfaceProps) {
         const formdata = new FormData();
         formdata.append("input", input);
         formdata.append("model", updatedModel);
-        formdata.append("matches", matches ? "true" : "false");
         files.map((file) => {
           formdata.append("files", file);
         });
