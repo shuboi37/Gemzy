@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import axios from "axios";
 import { Textarea } from "./ui/TextArea";
 import { PromptInputWithActions } from "./inputBox-demo";
 
@@ -19,98 +18,88 @@ export default function ChatInterface({}: ChatInterfaceProps) {
   const [onlyText, setOnlyText] = useState(false);
 
   async function fetcher() {
+    // Guard clause: Exit early if there's nothing to send.
+    if (!input.trim() && files.length === 0) {
+      return;
+    }
+
+    setLoading(true);
+    // Reset state for the new response
+    setResponse("");
+    setImageDataSrc(undefined);
+    setOnlyText(false);
+
     try {
-      if (input.trim() || files.length > 0) {
-        setLoading(true);
-        setImageDataSrc((prev) => prev);
-        let updatedModel = model;
-        console.log(input);
-        const regex =
-          /(?:https?:\/\/)?(?:www\.)?[\w-]+(?:\.[\w.-]+)+(?:\/[\w\-./?%&=]*)?\.pdf/gi;
-        const matches = input.match(regex);
-        console.log(matches);
+      const formdata = new FormData();
+      formdata.append("input", input);
+      formdata.append("model", model);
+      files.forEach((file) => {
+        formdata.append("files", file);
+      });
 
-        if (
-          matches ||
-          (model === "llama-3.3-70b-versatile" && files.length > 0)
-        ) {
-          updatedModel = "gemini-2.0-flash";
-          setModel(updatedModel);
-          console.log("hola");
-        }
+      setInput(""); // Clear input immediately for a better UX
+      setFiles([]); // Clear files immediately
 
-        const formdata = new FormData();
-        formdata.append("input", input);
-        formdata.append("model", updatedModel);
-        files.map((file) => {
-          formdata.append("files", file);
-        });
-        console.log(formdata);
-        console.log("i ran again");
-        if (model.startsWith("gemini") || files.length > 0 || matches) {
-          setResponse((prev) => prev);
-          setInput("");
-          console.log(model);
+      // --- SINGLE FETCH LOGIC ---
+      const stream = await fetch("/api/response", {
+        // Use relative path
+        method: "POST",
+        body: formdata,
+      });
 
-          console.log("hii, in gemini");
-          const backendResponse = await axios.post(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/response`,
-            formdata,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
+      if (!stream.ok) {
+        // Handle HTTP errors like 500, 404 etc.
+        const errorData = await stream.json();
+        throw new Error(
+          errorData.message || "An error occurred on the server."
+        );
+      }
+
+      // --- UNIFIED RESPONSE HANDLING ---
+      const reader = stream.body?.getReader();
+      if (!reader) {
+        throw new Error("Could not read response stream.");
+      }
+      const decoder = new TextDecoder("utf-8");
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+
+        // The backend will now ALWAYS stream ndjson, even for Gemini.
+        // A non-streaming Gemini response will just be a single chunk.
+        for (const line of chunk.trim().split("\n")) {
+          try {
+            const json = JSON.parse(line);
+
+            if (json.type === "delta") {
+              setResponse((prev) => prev + json.content);
+            } else if (json.type === "final_gemini_response") {
+              // A new response type for the complete Gemini data
+              setResponse(json.data.response);
+              setOnlyText(json.data.textWithPic);
+              setImageDataSrc(json.data.imageDataSrc);
+              setModel(json.data.effectiveModel);
+            } else if (json.type === "meta") {
+              setModel(json.model); // Fixed: was json.effectiveModel, should be json.model
+            } else if (json.type === "error") {
+              // Handle errors sent from within the stream
+              throw new Error(json.message);
             }
-          );
-
-          const data = await backendResponse.data;
-          setResponse(data?.response),
-            setOnlyText(data?.textWithPic),
-            setImageDataSrc(data?.imageDataSrc);
-          setModel(data?.model);
-        } else if (!files.length) {
-          console.log("hiiiii");
-          console.log(model);
-          setResponse((prev) => prev && "");
-          setImageDataSrc((prev) => prev && undefined);
-          setOnlyText((prev) => prev && false);
-          setInput("");
-          const stream = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/response`,
-            {
-              method: "POST",
-              body: formdata,
-            }
-          );
-
-          const reader = stream.body?.getReader();
-          const decoder = new TextDecoder("utf-8");
-
-          let fullText: string = "";
-          while (reader) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            const chunk = decoder.decode(value, { stream: true });
-            for (const line of chunk.trim().split("\n")) {
-              const json = JSON.parse(line);
-              if (json.type === "delta") {
-                fullText += json.content;
-                setResponse((prev) => prev + json.content);
-              } else if (json.type === "meta") {
-                setModel(json.model);
-              }
-            }
+          } catch (e) {
+            console.error("Failed to parse stream chunk:", line);
           }
         }
-
-        setFiles([]);
       }
     } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Error: ${error.message}`);
-      } else {
-        throw new Error("Something went wrong....");
-      }
+      // This will catch both network errors and errors thrown from the stream
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred.";
+      // You should display this error to the user in the UI
+      setResponse(`Error: ${errorMessage}`);
+      console.error(error);
     } finally {
       setLoading(false);
     }
