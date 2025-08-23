@@ -1,4 +1,3 @@
-// src/backend/controllers/handleGroq.ts
 import { getGroqChatCompletion } from "@/lib/backend/services/groqServices";
 
 export const handleGroq = async (
@@ -8,7 +7,6 @@ export const handleGroq = async (
   try {
     const groqStream = await getGroqChatCompletion({ input, effectiveModel });
 
-    // Create a ReadableStream that processes the Groq stream
     return new ReadableStream({
       async start(controller) {
         try {
@@ -21,7 +19,6 @@ export const handleGroq = async (
             }
           }
 
-          // Send meta information at the end
           const metaChunk =
             JSON.stringify({ type: "meta", model: effectiveModel }) + "\n";
           controller.enqueue(new TextEncoder().encode(metaChunk));
@@ -39,7 +36,6 @@ export const handleGroq = async (
     });
   } catch (error: unknown) {
     console.error("Error in handleGroq:", error);
-    // Create a readable stream that sends an error message
     return new ReadableStream({
       start(controller) {
         const errorMessage =

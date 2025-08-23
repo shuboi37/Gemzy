@@ -1,4 +1,3 @@
-// src/backend/controllers/gemini.controller.ts
 import { Part } from "@google/genai";
 import { getUrlToUploadService } from "@/lib/backend/services/urlToUploadServices";
 import { getFileUploadService } from "@/lib/backend/services/fileUploadService";
@@ -10,9 +9,6 @@ export const handleGemini = (
   effectiveModel: string,
   files: File[]
 ): ReadableStream => {
-  // We wrap the entire logic in a new ReadableStream.
-  // The 'start' method is an async function that gives us a 'controller'
-  // to enqueue (send) data chunks and close the stream.
   return new ReadableStream({
     async start(controller) {
       try {
@@ -21,9 +17,6 @@ export const handleGemini = (
         );
         let content: (string | Part)[] = [];
         let imagesArr: Part[] = [];
-
-        // Note: We don't pre-fill `content` with the input text anymore
-        // because we will add it separately to the `mergedContent`.
 
         const regex =
           /(?:https?:\/\/)?(?:www\.)?[\w-]+(?:\.[\w.-]+)+(?:\/[\w\-./?%&=]*)?\.pdf/gi;
@@ -47,7 +40,6 @@ export const handleGemini = (
 
         const mergedContent = [
           { text: input.trim() },
-          // Filter out the initial input string if it's still there from PDF processing
           ...content.filter((cont) => typeof cont !== "string"),
           ...imagesArr,
         ];
@@ -75,22 +67,17 @@ export const handleGemini = (
 
         console.log("[handleGemini] Final result:", finalResult);
 
-        // This is the key part for "simulating" the stream.
-        // We create a single chunk with a unique type.
         const chunk =
           JSON.stringify({
             type: "final_gemini_response",
             data: finalResult,
           }) + "\n";
 
-        // We send (enqueue) our single chunk of data.
         controller.enqueue(new TextEncoder().encode(chunk));
 
-        // And then we immediately close the stream.
         controller.close();
         console.log("[handleGemini] Sent single chunk and closed stream.");
       } catch (error) {
-        // If anything in the 'try' block fails, we catch it here.
         console.error("[handleGemini] Error:", error);
         const errorMessage =
           error instanceof Error
@@ -100,7 +87,6 @@ export const handleGemini = (
         const jsonError =
           JSON.stringify({ type: "error", message: errorMessage }) + "\n";
 
-        // We enqueue the error message and close the stream.
         controller.enqueue(new TextEncoder().encode(jsonError));
         controller.close();
       }
