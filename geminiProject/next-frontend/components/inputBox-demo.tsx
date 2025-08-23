@@ -6,11 +6,11 @@ import {
   PromptInputActions,
   PromptInputTextarea,
 } from "./ui/InputBox";
-import { Button } from "./ui/Button";
+import { Button } from "@/components/ui/Button";
 import { ArrowUp, Paperclip, Square, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
-import { ModelDropdown } from "./ui/ReusableUI";
+import { ModelDropdown } from "@/components/ui/ReusableUI";
 
 type PromptInputWithActionsProps = {
   model: string;

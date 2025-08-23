@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Textarea } from "./ui/TextArea";
-import { PromptInputWithActions } from "./inputBox-demo";
+import { Textarea } from "@/components/ui/TextArea";
+import { PromptInputWithActions } from "@/components/inputBox-demo";
 
 interface ChatInterfaceProps {
   // Add any props you need

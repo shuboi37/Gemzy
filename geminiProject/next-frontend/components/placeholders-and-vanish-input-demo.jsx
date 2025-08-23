@@ -1,6 +1,8 @@
 "use client";
 
-import { PlaceholdersAndVanishInput } from "./ui/placeholders-and-vanish-input";
+import React from "react";
+
+import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
 
 export default function PlaceholdersAndVanishInputDemo({
   className = "",

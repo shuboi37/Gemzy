@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { LogoSVG } from "./LogoSVG";
-import { MiniBar } from "./Minibar";
+import { LogoSVG } from "@/components/ui/LogoSVG";
+import { MiniBar } from "@/components/ui/Minibar";
 import {
   PanelRightClose,
   PanelLeftClose,

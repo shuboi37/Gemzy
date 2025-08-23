@@ -1,13 +1,13 @@
 "use client";
 
-import { Textarea } from "./TextArea";
+import { Textarea } from "@/components/ui/TextArea";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./Tooltip";
-import { cn } from "../../src/lib/utils";
+} from "@/components/ui/Tooltip";
+import { cn } from "@/lib/utils";
 import React, { createContext, useContext, useEffect, useRef } from "react";
 
 const PromptInputContext = createContext({

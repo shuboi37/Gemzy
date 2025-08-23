@@ -1,9 +1,9 @@
-import { Sidebar } from "../../components/ui/Sidebar";
-import { NavBar } from "../../components/ui/NavBar";
+import { Sidebar } from "@/components/ui/Sidebar";
+import { NavBar } from "@/components/ui/NavBar";
 import dynamic from "next/dynamic";
 
 // Lazy load the chat interface to reduce initial bundle size
-const ChatInterface = dynamic(() => import("../../components/ChatInterface"), {
+const ChatInterface = dynamic(() => import("@/components/ChatInterface"), {
   loading: () => (
     <div className="flex items-center justify-center w-full h-64">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
