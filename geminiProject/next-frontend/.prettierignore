@@ -1,0 +1,17 @@
+# Prettier ignore file
+node_modules/
+.next/
+out/
+build/
+dist/
+coverage/
+*.min.js
+*.min.css
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+.env*
+*.tsbuildinfo
+.turbo/
+.vscode/
+.idea/

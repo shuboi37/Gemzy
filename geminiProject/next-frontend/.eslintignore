@@ -1,0 +1,13 @@
+# ESLint ignore file
+node_modules/
+.next/
+out/
+build/
+dist/
+coverage/
+*.min.js
+*.config.js
+*.config.mjs
+.turbo/
+.vscode/
+.idea/

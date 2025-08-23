@@ -70,7 +70,7 @@ export const MiniBar = ({
     <div
       ref={minibarRef}
       onMouseDown={handleMouseDown}
-      className={`${className} w-11 h-96 absolute bg-gradient-to-b from-white/20 via-white/65 to-white/20 rounded-3xl cursor-move select-none ${
+      className={`${className} absolute h-96 w-11 cursor-move rounded-3xl bg-gradient-to-b from-white/20 via-white/65 to-white/20 select-none ${
         isDragging ? "z-50" : "z-10"
       }`}
       style={{
@@ -82,15 +82,15 @@ export const MiniBar = ({
           "0 0 20px rgba(255, 255, 255, 0.08)",
       }}
     >
-      <div className="w-full h-full py-3 flex flex-col ">
-        <div className="flex flex-col rounded-3xl items-center h-full">
-          <MessageSquarePlus className="flex-1 hover:bg-black/75 hover:scale-110 text-white p-2 rounded-3xl cursor-pointer w-10 h-10 transition-all ease-in-out " />
-          <Search className="flex-1 hover:bg-black/75 hover:scale-110 text-white p-2 rounded-3xl cursor-pointer w-10 h-10 transition-all ease-in-out" />
+      <div className="flex h-full w-full flex-col py-3">
+        <div className="flex h-full flex-col items-center rounded-3xl">
+          <MessageSquarePlus className="h-10 w-10 flex-1 cursor-pointer rounded-3xl p-2 text-white transition-all ease-in-out hover:scale-110 hover:bg-black/75" />
+          <Search className="h-10 w-10 flex-1 cursor-pointer rounded-3xl p-2 text-white transition-all ease-in-out hover:scale-110 hover:bg-black/75" />
           <ChevronsUpDown
             onClick={() => setIsCollapsible(false)}
-            className="flex-1 hover:bg-black/75 hover:scale-110 text-white p-2 rounded-3xl cursor-pointer w-10 h-10 transition-all ease-in-out"
+            className="h-10 w-10 flex-1 cursor-pointer rounded-3xl p-2 text-white transition-all ease-in-out hover:scale-110 hover:bg-black/75"
           />
-          <Images className="flex-1 hover:bg-black/75 hover:scale-110 text-white p-2 rounded-3xl cursor-pointer w-10 h-10 transition-all ease-in-out" />
+          <Images className="h-10 w-10 flex-1 cursor-pointer rounded-3xl p-2 text-white transition-all ease-in-out hover:scale-110 hover:bg-black/75" />
         </div>
       </div>
     </div>

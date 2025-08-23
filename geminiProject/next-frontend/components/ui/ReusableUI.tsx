@@ -48,17 +48,17 @@ ModelDropdownProps) {
       open={isOpen}
     >
       <DropdownMenuTrigger asChild>
-        <div className="hover:bg-gray-400 rounded-2xl">
+        <div className="rounded-2xl hover:bg-gray-400">
           <ChevronUp
             className={`${
               isOpen ? "rotate-0 bg-gray-400" : "rotate-180"
-            } w-8 h-8 text-black hover:bg-gray-400 rounded-2xl transition-all ease-in-out duration-150`}
+            } h-8 w-8 rounded-2xl text-black transition-all duration-150 ease-in-out hover:bg-gray-400`}
             strokeOpacity="0.79"
           />
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="border-2 border-gray-700 w-48 translate-y-3 bg-black">
-        <DropdownMenuLabel className="font-extralight text-white border-b-2 border-gray-700">
+      <DropdownMenuContent className="w-48 translate-y-3 border-2 border-gray-700 bg-black">
+        <DropdownMenuLabel className="border-b-2 border-gray-700 font-extralight text-white">
           Choose Model
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

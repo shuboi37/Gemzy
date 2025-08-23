@@ -4,7 +4,7 @@ export const DarkRadialLayout = ({
   children: React.ReactNode;
 }) => {
   return (
-    <div className="min-h-screen w-full bg-[#020617] relative">
+    <div className="relative min-h-screen w-full bg-[#020617]">
       {/* Dark Radial Glow Background */}
       <div
         className="absolute inset-0 z-0"

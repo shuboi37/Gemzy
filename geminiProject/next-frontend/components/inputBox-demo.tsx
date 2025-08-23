@@ -83,7 +83,7 @@ export function PromptInputWithActions({
           {files.map((file, index) => (
             <div
               key={index}
-              className=" bg-gray-800 text-white text-pretty flex items-center gap-2 rounded-lg px-3 py-2 text-sm"
+              className="flex items-center gap-2 rounded-lg bg-gray-800 px-3 py-2 text-sm text-pretty text-white"
             >
               <Paperclip
                 className={`size-4 rounded-xl ${
@@ -98,7 +98,7 @@ export function PromptInputWithActions({
               })()}
               <button
                 onClick={() => handleRemoveFile(index)}
-                className="hover:bg-black rounded-full p-1"
+                className="rounded-full p-1 hover:bg-black"
               >
                 <X className="size-4" />
               </button>
@@ -116,7 +116,7 @@ export function PromptInputWithActions({
               htmlFor="file-upload"
               className={`flex h-8 w-8 items-center justify-center rounded-2xl ${
                 model === "gemini-2.0-flash"
-                  ? "hover:bg-gray-400 cursor-pointer"
+                  ? "cursor-pointer hover:bg-gray-400"
                   : "pointer-events-none cursor-not-allowed opacity-50"
               }`}
             >
@@ -129,7 +129,7 @@ export function PromptInputWithActions({
                 ref={uploadInputRef}
                 disabled={model !== "gemini-2.0-flash"}
               />
-              <Paperclip className="text-black size-5" />
+              <Paperclip className="size-5 text-black" />
             </label>
           </PromptInputAction>
           <PromptInputAction
@@ -137,7 +137,7 @@ export function PromptInputWithActions({
             disabled={isOpen}
             isDropOpen={isDropOpen}
           >
-            <div className="cursor-pointer hover:bg-gray-400 rounded-2xl w-8 h-8">
+            <div className="h-8 w-8 cursor-pointer rounded-2xl hover:bg-gray-400">
               <ModelDropdown
                 onFlashClick={() => setModel("gemini-2.0-flash")}
                 onImageGenClick={() =>
@@ -161,11 +161,11 @@ export function PromptInputWithActions({
             <Button
               variant="default"
               size="icon"
-              className="h-8 w-8 rounded-full hover:bg-gray-400 fill-current"
+              className="h-8 w-8 rounded-full fill-current hover:bg-gray-400"
               onClick={onSubmit}
             >
               {loading ? (
-                <Square className="size-5 hover:fill-white fill-current" />
+                <Square className="size-5 fill-current hover:fill-white" />
               ) : (
                 <ArrowUp className="size-5" />
               )}

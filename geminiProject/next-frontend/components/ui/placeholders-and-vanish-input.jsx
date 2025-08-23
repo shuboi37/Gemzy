@@ -48,7 +48,7 @@ export function PlaceholdersAndVanishInput({
   return (
     <form
       onSubmit={handleSubmit}
-      className={`relative w-full mx-auto bg-white dark:bg-white h-12 rounded-full overflow-hidden shadow-md transition duration-200 ${
+      className={`relative mx-auto h-12 w-full overflow-hidden rounded-full bg-white shadow-md transition duration-200 dark:bg-white ${
         value ? "bg-gray-50" : ""
       }`}
     >
@@ -58,13 +58,13 @@ export function PlaceholdersAndVanishInput({
         ref={inputRef}
         value={value}
         type="text"
-        className={`w-full relative text-sm sm:text-base z-50 border-2 border-green-600 dark:text-black bg-transparent text-black font-semibold h-full rounded-full focus:outline-none pl-4 sm:pl-10 pr-20 ${
+        className={`relative z-50 h-full w-full rounded-full border-2 border-green-600 bg-transparent pr-20 pl-4 text-sm font-semibold text-black focus:outline-none sm:pl-10 sm:text-base dark:text-black ${
           animating ? "text-transparent dark:text-transparent" : ""
         }`}
         disabled={disabled}
       />
 
-      <div className="absolute inset-0 flex items-center rounded-full pointer-events-none">
+      <div className="pointer-events-none absolute inset-0 flex items-center rounded-full">
         <AnimatePresence mode="wait">
           {!value && (
             <motion.p
@@ -73,7 +73,7 @@ export function PlaceholdersAndVanishInput({
               exit={{ y: -15, opacity: 0 }}
               transition={{ duration: 0.3, ease: "linear" }}
               key={`current-placeholder-${currentPlaceholder}`}
-              className="dark:text-zinc-500 text-sm sm:text-base font-normal text-neutral-500 pl-4 sm:pl-12 w-full truncate"
+              className="w-full truncate pl-4 text-sm font-normal text-neutral-500 sm:pl-12 sm:text-base dark:text-zinc-500"
             >
               {placeholders[currentPlaceholder]}
             </motion.p>
