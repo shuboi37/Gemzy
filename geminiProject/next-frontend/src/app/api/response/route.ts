@@ -1,4 +1,3 @@
-// src/app/api/response/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { handleGemini } from "@/lib/backend/controllers/gemini.controller";
 import { handleGroq } from "@/lib/backend/controllers/handleGroq";
@@ -16,17 +15,12 @@ export async function POST(req: NextRequest) {
     console.log(`[API Route] Input: "${input}"`);
     console.log(`[API Route] Files count: ${files.length}`);
 
-    // This is the variable we'll use for the final routing decision.
     let effectiveModel = model;
 
-    // The backend now inspects the input directly.
     const pdfRegex =
       /(?:https?:\/\/)?(?:www\.)?[\w-]+(?:\.[\w.-]+)+(?:\/[\w\-./?%&=]*)?\.pdf/gi;
     const hasPdfMatches = pdfRegex.test(input);
 
-    // **This is the core logic you requested:**
-    // If a PDF URL is found AND a non-Gemini model was selected,
-    // override the model to use gemini-2.0-flash.
     if (hasPdfMatches && !model.startsWith("gemini")) {
       effectiveModel = "gemini-2.0-flash";
       console.log(
@@ -36,7 +30,6 @@ export async function POST(req: NextRequest) {
 
     let stream: ReadableStream;
 
-    // The final routing decision is based on the 'effectiveModel'.
     if (effectiveModel.startsWith("llama")) {
       console.log("[API Route] Handing off to Groq handler.");
       stream = await handleGroq(input, effectiveModel);
