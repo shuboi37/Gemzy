@@ -44,6 +44,15 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 31536000, // Cache images for 1 year
     dangerouslyAllowSVG: true, // Allow SVG (you have favicon.svg)
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // // Allow blob URLs for optimized AI images
+    // remotePatterns: [
+    //   {
+    //     protocol: "https",
+    //     hostname: "**",
+    //   },
+    // ],
+    // // Enable optimization for blob URLs
+    // unoptimized: false,
   },
 
   // Turbopack configuration

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+// import { useEffect } from "react";
+// import Image from "next/image";
 import { Textarea } from "@/components/ui/TextArea";
 import { PromptInputWithActions } from "@/components/inputBox-demo";
 
@@ -11,9 +13,38 @@ export default function ChatInterface({}: ChatInterfaceProps) {
   const [input, setInput] = useState("");
   const [model, setModel] = useState("gemini-2.0-flash");
   const [imageDataSrc, setImageDataSrc] = useState<string | undefined>("");
+  // const [optimizedImageSrc, setOptimizedImageSrc] = useState<string | null>(
+  //   null
+  // );
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [onlyText, setOnlyText] = useState(false);
+
+  // Convert data URL to blob URL for Next.js Image optimization
+  // useEffect(() => {
+  //   if (imageDataSrc && imageDataSrc.startsWith("data:")) {
+  //     // Convert data URL to blob
+  //     fetch(imageDataSrc)
+  //       .then((res) => res.blob())
+  //       .then((blob) => {
+  //         const blobUrl = URL.createObjectURL(blob);
+  //         setOptimizedImageSrc(blobUrl);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error converting data URL to blob:", error);
+  //         setOptimizedImageSrc(null);
+  //       });
+  //   } else {
+  //     setOptimizedImageSrc(imageDataSrc || null);
+  //   }
+
+  //   // Cleanup blob URL when component unmounts or imageDataSrc changes
+  //   return () => {
+  //     if (optimizedImageSrc && optimizedImageSrc.startsWith("blob:")) {
+  //       URL.revokeObjectURL(optimizedImageSrc);
+  //     }
+  //   };
+  // }, [imageDataSrc]);
 
   async function fetcher() {
     if (!input.trim() && files.length === 0) {
@@ -23,6 +54,7 @@ export default function ChatInterface({}: ChatInterfaceProps) {
     setLoading(true);
     setResponse("");
     setImageDataSrc(undefined);
+    // setOptimizedImageSrc(null);
     setOnlyText(false);
 
     try {
@@ -129,11 +161,18 @@ export default function ChatInterface({}: ChatInterfaceProps) {
               {onlyText && (
                 <p className="px-4 py-3 font-semibold text-white">{response}</p>
               )}
-              <img
-                src={imageDataSrc}
-                alt="Gemini Image"
-                className="rounded-md shadow-md"
-              />
+              {imageDataSrc && (
+                <img
+                  src={imageDataSrc}
+                  alt="Gemini Image"
+                  width={500}
+                  height={300}
+                  className="rounded-md shadow-md"
+                  // priority={true}
+                  // placeholder="blur"
+                  // blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R/HNlm+3YZ"
+                />
+              )}
             </div>
           ) : (
             <Textarea

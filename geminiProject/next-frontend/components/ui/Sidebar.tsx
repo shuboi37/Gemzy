@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { LogoSVG } from "@/components/ui/LogoSVG";
 import { MiniBar } from "@/components/ui/Minibar";
+import { motion } from "motion/react";
 import {
   PanelRightClose,
   PanelLeftClose,
@@ -36,21 +37,106 @@ export const Sidebar = () => {
     setIsHoverable(false);
   };
 
+  const springTransitions = {
+    default: {
+      type: "spring" as const,
+      stiffness: 300,
+      damping: 25,
+      mass: 0.8,
+    },
+    sidebar: {
+      type: "spring" as const,
+      stiffness: 250,
+      damping: 20,
+      mass: 1,
+    },
+    children: {
+      type: "spring" as const,
+      stiffness: 400,
+      damping: 30,
+    },
+    chevron: {
+      type: "spring" as const,
+      stiffness: 300,
+      damping: 20,
+    },
+  };
+
+  const sideVariants = {
+    open: {
+      width: "272px",
+    },
+    closed: {
+      width: "64px",
+    },
+  };
+
+  const parentVars = {
+    open: {
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+    closed: {
+      transition: {
+        staggerChildren: 0.08,
+        staggerDirection: -1,
+        delayChildren: 0,
+      },
+    },
+  };
+
+  const childVars = {
+    open: {
+      opacity: 1.02,
+      y: 0,
+    },
+    closed: {
+      opacity: 1,
+      y: -10,
+    },
+  };
+
+  const links = [
+    {
+      name: "New Chat",
+      href: "/new-chat",
+      icon: <MessageSquarePlus className="h-6 w-6" />,
+    },
+    {
+      name: "Search",
+      href: "/search",
+      icon: <Search className="h-6 w-6" />,
+    },
+    {
+      name: "Library",
+      href: "/library",
+      icon: <Images className="h-6 w-6" />,
+    },
+  ];
+
   return !isCollapsible ? (
-    <div
+    <motion.div
+      initial={false}
+      animate={isOpen ? "open" : "closed"}
+      transition={springTransitions.sidebar}
+      exit="closed"
       onClick={handleClick}
       className={`${
-        isOpen ? "w-68" : "w-16 cursor-e-resize"
+        !isOpen && "cursor-e-resize"
       } relative h-screen bg-neutral-900/85`}
     >
-      <div
+      <motion.nav
+        variants={sideVariants}
+        transition={springTransitions.default}
         className={`flex h-full flex-col items-center ${
           isOpen
             ? "bg-gradient-to-b from-neutral-950 via-neutral-800 to-neutral-950"
             : ""
         }`}
       >
-        <div className="flex h-20 w-full flex-shrink-0 items-center gap-28 p-2">
+        <motion.div className="flex h-20 w-full flex-shrink-0 items-center gap-28 p-2">
           <button
             onClick={handleClick}
             onMouseLeave={!isOpen ? () => setIsHoverable(false) : undefined}
@@ -82,54 +168,55 @@ export const Sidebar = () => {
               </button>
             </div>
           )}
-        </div>
+        </motion.div>
 
-        <div className="flex w-full flex-1 flex-col overflow-hidden">
-          {isOpen ? (
-            <div className="mt-2 mb-4 flex w-full flex-col space-y-3 px-2">
-              <button className="h-10 w-full rounded-3xl hover:bg-neutral-700">
-                <span className="ml-1 flex items-center space-x-3 p-2 text-white">
-                  <MessageSquarePlus className="h-6 w-6" />
-                  <span className="-translate-y-[2.5px] font-sans text-[16px]">
-                    New Chat
-                  </span>
-                </span>
-              </button>
-              <button className="h-10 w-full rounded-3xl hover:bg-neutral-700">
-                <span className="ml-1 flex w-full items-center space-x-3 p-2 text-white">
-                  <Search className="h-6 w-6" />
-                  <span className="-translate-y-[2.5px] font-sans text-[16px] tracking-wide">
-                    Search
-                  </span>
-                </span>
-              </button>
-              <button className="h-10 w-full rounded-3xl hover:bg-neutral-700">
-                <span className="ml-1 flex w-full items-center space-x-3 p-2 text-white">
-                  <Images className="h-6 w-6" />
-                  <span className="-translate-y-[2.5px] font-sans text-[16px] tracking-wide">
-                    Library
-                  </span>
-                </span>
-              </button>
-            </div>
-          ) : (
-            <div className="relative mt-5 flex w-16 flex-1 flex-col items-center">
-              <div className="flex h-[25%] flex-col items-center space-y-2">
-                <button className="rounded-lg p-3 hover:bg-neutral-700">
-                  <MessageSquarePlus className="h-6 w-6 flex-1 text-white transition-all duration-200 ease-in-out" />
-                </button>
-                <button className="rounded-lg p-3 hover:bg-neutral-700">
-                  <Search className="h-6 w-6 flex-1 text-white transition-all duration-200 ease-in-out" />
-                </button>
-                <button className="rounded-lg p-3 hover:bg-neutral-700">
-                  <Images className="h-6 w-6 flex-1 text-white transition-all duration-200 ease-in-out" />
-                </button>
-              </div>
-              <div className="absolute bottom-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-pink-200 to-rose-600">
-                <User className="h-5 w-5 text-white" />
-              </div>
-            </div>
-          )}
+        <motion.div className="flex w-full flex-1 flex-col overflow-hidden">
+          <motion.div
+            variants={parentVars}
+            initial="closed"
+            animate={isOpen ? "open" : "closed"}
+            className={
+              isOpen
+                ? "mt-2 mb-4 flex w-full flex-col space-y-3 px-2"
+                : "relative mt-5 flex w-16 flex-1 flex-col items-center"
+            }
+          >
+            {isOpen ? (
+              <>
+                {links.map((link) => (
+                  <motion.button
+                    key={link.name}
+                    variants={childVars}
+                    className="h-10 w-full rounded-3xl transition-colors duration-200 hover:bg-neutral-700"
+                  >
+                    <span className="ml-1 flex items-center space-x-3 p-2 text-white">
+                      {link.icon}
+                      <span className="-translate-y-[2.5px] font-sans text-[16px]">
+                        {link.name}
+                      </span>
+                    </span>
+                  </motion.button>
+                ))}
+              </>
+            ) : (
+              <>
+                <div className="flex h-[25%] flex-col items-center space-y-2">
+                  {links.map((link) => (
+                    <motion.button
+                      key={link.name}
+                      variants={childVars}
+                      className="rounded-lg p-3 transition-colors duration-200 hover:bg-neutral-700"
+                    >
+                      {link.icon}
+                    </motion.button>
+                  ))}
+                </div>
+                <div className="absolute bottom-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-pink-200 to-rose-600">
+                  <User className="h-5 w-5 text-white" />
+                </div>
+              </>
+            )}
+          </motion.div>
 
           {isOpen && (
             <div className="flex w-full flex-1 flex-col overflow-hidden px-2">
@@ -139,11 +226,12 @@ export const Sidebar = () => {
                   className="flex w-full flex-shrink-0 items-center justify-between rounded-lg px-3 py-2 text-neutral-300/80 transition-all duration-200 hover:bg-neutral-700/50 hover:text-white"
                 >
                   <span className="text-[16px] font-medium">Chats</span>
-                  <ChevronDown
-                    className={`h-4 w-4 transition-transform duration-200 ${
-                      isChatsExpanded ? "rotate-180" : "rotate-0"
-                    }`}
-                  />
+                  <motion.div
+                    animate={{ rotate: isChatsExpanded ? 180 : 0 }}
+                    transition={springTransitions.chevron}
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </motion.div>
                 </button>
 
                 {isChatsExpanded && (
@@ -183,7 +271,7 @@ export const Sidebar = () => {
               </div>
             </div>
           )}
-        </div>
+        </motion.div>
 
         {isOpen && (
           <div className="absolute bottom-0 left-0 w-full border-t border-neutral-700/50 bg-neutral-800/50">
@@ -229,8 +317,8 @@ export const Sidebar = () => {
             </div>
           </div>
         )}
-      </div>
-    </div>
+      </motion.nav>
+    </motion.div>
   ) : (
     <MiniBar setIsCollapsible={setIsCollapsible} />
   );
