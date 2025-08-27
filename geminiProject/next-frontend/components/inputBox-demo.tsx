@@ -7,7 +7,7 @@ import {
   PromptInputTextarea,
 } from "./ui/InputBox";
 import { Button } from "@/components/ui/Button";
-import { ArrowUp, Paperclip, Square, X } from "lucide-react";
+import { ArrowUp, ImageUp, Square, X} from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
 import { ModelDropdown } from "@/components/ui/ReusableUI";
@@ -85,7 +85,7 @@ export function PromptInputWithActions({
               key={index}
               className="flex items-center gap-2 rounded-lg bg-gray-800 px-3 py-2 text-sm text-pretty text-white"
             >
-              <Paperclip
+              <ImageUp
                 className={`size-4 rounded-xl ${
                   model !== "gemini-2.0-flash" &&
                   "pointer-events-none cursor-not-allowed"
